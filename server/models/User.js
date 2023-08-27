@@ -1,3 +1,5 @@
+const DB = require('../utils/db')
+
 class User {
 	profileImage;
 	email;
@@ -35,6 +37,16 @@ class User {
 		this.achievements = achievements;	//array of achievements
 		this.badges = badges;				//array of badges
 	}
+
+	static async FindAllUsers() {
+		let query = {}
+		let project = {}
+		return await new DB().FindAll('users');
+	}
+	static async FindByCity(city) {
+		let query = { 'residence.city': city }
+		return await new DB().FindAll('users', query);
+	}
 }
 
 class Admin extends User {
@@ -43,10 +55,12 @@ class Admin extends User {
 	phone;
 	clearanceLevel;
 	constructor(lastLogin, active, phone, clearanceLevel) { //...userArgs, 
-		super(...userArgs);
+		// super(...userArgs);
 		this.lastLogin = lastLogin;
 		this.active = active;
 		this.phone = phone;
 		this.clearanceLevel = clearanceLevel;
 	}
 }
+module.exports = User;
+module.exports = Admin;

@@ -12,10 +12,12 @@ class ListItem {
     this.productName = productName;
     this.recycleCat = recycleCat;
     this.auxInfo = auxInfo;
-    this.ofList = ofList; 
-    this.barCode = barCode; 
+    this.ofList = ofList;
+    this.barCode = barCode;
     this.productPoints = productPoints;
     this.ticked = ticked;
     this.readyForRecycle = readyForRecycle;
   }
 }
+
+module.exports = ListItem;

@@ -1,7 +1,7 @@
-class shoppingLists {
+class ShoppingLists {
 	listName;
 	listOrder;
-	items;	//referenced list of items
+	items;			//referenced list of items
 	listType;
 	archivedStatus; //archived, strikedthrough       
 	pinned;
@@ -14,5 +14,11 @@ class shoppingLists {
 		this.archivedStatus = archivedStatus;
 		this.pinned = pinned;
 	}
+
+	//הוספה
+	//עריכה
+	// מחיקה
+	//שליפה
 }
 
+module.exports = ShoppingLists;
