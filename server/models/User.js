@@ -1,5 +1,4 @@
 const DB = require('../utils/db')
-
 class User {
 	profileImage;
 	email;
@@ -33,7 +32,7 @@ class User {
 		this.points = points;
 		this.accountCreated = accountCreated;
 
-		this.shoppingLists = shoppingLists;				//array of lists, embeded
+		this.shoppingLists = shoppingLists;	//array of lists, embeded
 		this.achievements = achievements;	//array of achievements
 		this.badges = badges;				//array of badges
 	}
@@ -49,18 +48,18 @@ class User {
 	}
 }
 
-class Admin extends User {
-	lastLogin;
-	active;
-	phone;
-	clearanceLevel;
-	constructor(lastLogin, active, phone, clearanceLevel) { //...userArgs, 
-		// super(...userArgs);
-		this.lastLogin = lastLogin;
-		this.active = active;
-		this.phone = phone;
-		this.clearanceLevel = clearanceLevel;
-	}
-}
+// class Admin extends User {
+// 	lastLogin;
+// 	active;
+// 	phone;
+// 	clearanceLevel;
+// 	constructor(...userArgs,lastLogin, active, phone, clearanceLevel) { //...userArgs, 
+// 		super(...userArgs);
+// 		this.lastLogin = lastLogin;
+// 		this.active = active;
+// 		this.phone = phone;
+// 		this.clearanceLevel = clearanceLevel;
+// 	}
+// }
 module.exports = User;
-module.exports = Admin;
+// module.exports = Admin;

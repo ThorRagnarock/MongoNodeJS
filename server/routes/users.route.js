@@ -17,7 +17,7 @@ UsersRoute.get('/:city', async (req, res) => {
 		let data = await UserModel.FindByCity(city);
 		res.status(200).json(data);
 	} catch (error) {
-		res.status(500).json({error});
+		res.status(500).json({ error });
 	}
 })
 module.exports = UsersRoute; 
