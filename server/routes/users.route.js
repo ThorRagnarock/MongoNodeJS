@@ -1,5 +1,6 @@
-const UserModel = require('../models/user');
+
 const UsersRoute = require('express').Router();
+const UserModel = require('../models/user');
 
 
 UsersRoute.get('/', async (req, res) => {
@@ -13,9 +14,12 @@ UsersRoute.get('/', async (req, res) => {
 
 UsersRoute.get('/:city', async (req, res) => {
 	try {
-		let city = req.params;
+		let { city } = req.params; //that's an object....
+		// console.log(city);
+
 		let data = await UserModel.FindByCity(city);
 		res.status(200).json(data);
+
 	} catch (error) {
 		res.status(500).json({ error });
 	}

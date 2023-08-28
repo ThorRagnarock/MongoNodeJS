@@ -1,4 +1,5 @@
 const DB = require('../utils/db')
+
 class User {
 	profileImage;
 	email;
@@ -43,7 +44,7 @@ class User {
 		return await new DB().FindAll('users');
 	}
 	static async FindByCity(city) {
-		let query = { 'residence.city': city }
+		let query = { "residence.city" : city }
 		return await new DB().FindAll('users', query);
 	}
 }

@@ -24,20 +24,11 @@ class DB {
 			await this.client.close();		//DIS-CONNECTING
 		}
 	}
-
+	//TODO: create a function that concatenate object to form a list
+	//TODO: create a function that removes objects from a list
+	//TODO: create an function that is cross-referncing from 6 different
 }
 
 module.exports = DB;
 
-
 //"mongodb://localhost:27017"; //
-
-
-
-
-
-db.users.updateMany(
-	{}, 
-	{ $rename: { "residence.add1": "residence.street" } }
-  );
-  

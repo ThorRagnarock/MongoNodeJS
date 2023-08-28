@@ -1,3 +1,6 @@
+const DB = require('../utils/db')
+
+
 class ListItem {
   productName;
   recycleCat;   //genralRecycle: 1, glass:1 - what color codes are on the product
