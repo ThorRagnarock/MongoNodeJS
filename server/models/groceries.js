@@ -31,15 +31,12 @@ class Groceries {
 	static async GetRelationGroceries(colorCode, conditionFilter) {
 		let query = { "colorCode": colorCode, "conditionFilter": conditionFilter }
 		//console.log(query);
-
-		let  packagingSection = await new DB().FindAll('groceries', { "colorCode": colorCode });
-		
+		let  packagingSection = await new DB().FindAll('groceries', { "colorCode": colorCode });		
 		packagingSection = packagingSection[0];
-
 		const filteredGroceries = packagingSection.product.filter(product => {
-			return conditionFilter ? product.startsWith('!') : !product.startsWith('!');
+			return conditionFilter ? !product.startsWith('!') : product.startsWith('!');
 		})
-		return { ...packagingSection, product: filteredGroceries };
+		return { product: filteredGroceries };//...packagingSection, 
 	}
 
 }

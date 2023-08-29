@@ -22,6 +22,7 @@ class ShoppingList {
 		this.listItems = listItems;
 	}
 
+	//פעולות שליפה
 	static async FindAllShoppingLists() {
 		return await new DB().FindAll('shoppingList');
 	}
@@ -30,6 +31,10 @@ class ShoppingList {
 		let query = { "userID" : userID }
 		return await new DB().FindAll('shoppingList', query);
 	}
+
+
+	// static async CreateList(
+
 	//הוספה
 	//עריכה
 	// מחיקה

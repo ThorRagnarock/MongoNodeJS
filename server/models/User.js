@@ -43,11 +43,27 @@ class User {
 		let project = {}
 		return await new DB().FindAll('users');
 	}
-	static async FindByCity(city) {
-		let query = { "residence.city" : city }
+
+	static async FindByEmail(email) {
+		let query = { "email": { $regex: new RegExp(`^${email}$`, 'i') } }
 		return await new DB().FindAll('users', query);
 	}
+
+	static async UpdateUserDetails(id, doc) {
+		return await new DB().UpdateById('users', id, doc)
+	}
 }
+
+
+module.exports = User;
+// module.exports = Admin;
+
+
+
+	// static async FindByCity(city) {
+	// 	let query = { "residence.city": city }
+	// 	return await new DB().FindAll('users', query);
+	// }
 
 // class Admin extends User {
 // 	lastLogin;
@@ -62,5 +78,3 @@ class User {
 // 		this.clearanceLevel = clearanceLevel;
 // 	}
 // }
-module.exports = User;
-// module.exports = Admin;
