@@ -42,7 +42,6 @@ class DB {
 		try {
 			await this.client.connect();	//CONNECTING 
 			return await this.client.db(this.db_name).collection(collection).insertOne(doc);
-
 		} catch (error) {
 			throw error;
 		}

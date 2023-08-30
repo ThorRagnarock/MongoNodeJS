@@ -1,25 +1,13 @@
 const DB = require('../utils/db')
+const bcrypt = require('bcrypt');
 
 class User {
-	profileImage;
-	email;
-	password;
-	passwordResetToken;
+	name; email; password; passwordResetToken;
+	recycPrefs; residence;
+	status; DateOfBirth; profileImage; points; accountCreated;
+	shoppingLists; achievements; badges;
 
-	name;
-	recycPrefs;
-	residence;
-
-	status;
-	birthDate;
-	points;
-	accountCreated;
-
-	shoppingLists;
-	achievements;
-	badges;
-
-	constructor(profileImage, email, password, passwordResetToken, name, recycPrefs, residence, status, birthDate, points, accountCreated, shoppingLists, achievements, badges) {
+	constructor(name, email, password, passwordResetToken, recycPrefs, residence, status, DateOfBirth,profileImage, points, accountCreated, shoppingLists, achievements, badges) {
 		this.profileImage = profileImage;
 		this.email = email;
 		this.password = password;
@@ -29,7 +17,7 @@ class User {
 		this.residence = residence;			//object contains city, street and streetnum
 
 		this.status = status;
-		this.birthDate = birthDate;
+		this.DateOfBirth = DateOfBirth;
 		this.points = points;
 		this.accountCreated = accountCreated;
 
@@ -37,7 +25,20 @@ class User {
 		this.achievements = achievements;	//array of achievements
 		this.badges = badges;				//array of badges
 	}
+	static async Register(name, email, password, passwordResetToken, recycPrefs, residence, status, DateOfBirth, profileImage, points, accountCreated) {
+		let hashedPassword = await bcrypt.hash(password, 10);
+		let user = new User(name, email, hashedPassword, passwordResetToken, recycPrefs, residence, status, DateOfBirth, profileImage, points, accountCreated);
 
+		// console.log(password, hashedPassword);
+		console.log(user);
+		return await new DB().Insert('users', user);
+	}
+
+	static async login(email, password) {
+		this.email = email;
+		this.password = await bcrypt.hash(password, 10);
+		console.log(password, this.password);
+	}
 	static async FindAllUsers() {
 		let query = {}
 		let project = {}
@@ -56,25 +57,16 @@ class User {
 
 
 module.exports = User;
+
 // module.exports = Admin;
-
-
-
-	// static async FindByCity(city) {
-	// 	let query = { "residence.city": city }
-	// 	return await new DB().FindAll('users', query);
-	// }
-
-// class Admin extends User {
-// 	lastLogin;
-// 	active;
-// 	phone;
-// 	clearanceLevel;
-// 	constructor(...userArgs,lastLogin, active, phone, clearanceLevel) { //...userArgs, 
-// 		super(...userArgs);
-// 		this.lastLogin = lastLogin;
-// 		this.active = active;
-// 		this.phone = phone;
-// 		this.clearanceLevel = clearanceLevel;
-// 	}
-// }
+/*
+		this.profileImage = profileImage;
+		this.email = email;
+		this.name = name;
+		this.recycPrefs = recycPrefs;
+		this.residence = residence;
+		this.status = status;
+		this.DateOfBirth = DateOfBirth;
+		this.points = points;
+		this.accountCreated = accountCreated;
+		*/

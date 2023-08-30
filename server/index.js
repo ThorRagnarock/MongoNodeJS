@@ -6,7 +6,6 @@ const express = require('express');
 const PORT = process.env.PORT || 5500;
 let server = express();
 
-
 server.use(cors());
 server.use(express.json())
 
