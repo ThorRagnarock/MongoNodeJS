@@ -6,10 +6,9 @@ class DB {
 	client;
 
 	constructor() {
-		this.db_uri = "mongodb+srv://rList1_user:ouzQZL4j8sZrdUJT@cluster0.aykx1sy.mongodb.net/?retryWrites=true&w=majority";
-		//process.env.db_uri;
+		this.db_uri = process.env.DB_URI;
 		//
-		this.db_name = "_recycliST";//process.env.db_name;
+		this.db_name = process.env.DB_NAME;
 		//
 		this.client = new MongoClient(this.db_uri)
 	}

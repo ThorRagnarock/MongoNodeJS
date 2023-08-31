@@ -2,15 +2,14 @@ const DB = require('../utils/db')
 const bcrypt = require('bcrypt');
 
 
-const { users } = require('../utils/mockdata');
-
 class User {
-	name; email; password; passwordResetToken;
+	_id; name; email; password; passwordResetToken;
 	recycPrefs; residence;
 	status; DateOfBirth; profileImage; points; accountCreated;
 	shoppingLists; achievements; badges;
 
 	constructor(name, email, password, passwordResetToken, recycPrefs, residence, status, DateOfBirth, profileImage, points, accountCreated, shoppingLists, achievements, badges) {
+		// this._id = _id;
 		this.profileImage = profileImage;
 		this.email = email;
 		this.password = password;
@@ -36,7 +35,6 @@ class User {
 
 		// console.log(password, hashedPassword);
 		console.log(user);
-		users.push(user);//???? WHAT AM I EVEN DOING
 		return await new DB().Insert('users', user);
 	}
 	////////////////////////////////////////////////
@@ -44,13 +42,17 @@ class User {
 
 	static async Login(email, password) {
 		try {
-			let user = this.FindByEmail(u => u.email == email) //will work?
+			let query = { email: email }
+			//let user = this.FindByEmail(u => u.email == email) //will work?
+			let user = await new DB().FindOne('users', query);
+
 			console.log({ user });
-			if (!user) return res.status(404).json({ msg: "user not exists" })
-			if (await bcrypt.compare(password, user.password))
-				res.status(200).json({ msg: "login succesful" })
-			else
-				res.status(500).json({ msg: "incorrect info" })
+			if (!user || !(await bcrypt.compare(password, user.password)))
+				return null;
+			
+			//res.status(200).json({ msg: "login succesful" })
+			//return {...user}
+			return user;
 		} catch (error) {
 			res.status(500).json({ error });
 		}

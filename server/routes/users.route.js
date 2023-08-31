@@ -8,8 +8,11 @@ UsersRoute.post('/register', async (req, res) => {
         const now = new Date();
         const accountCreated = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
 		//
-        const { name, email, password, recycPrefs, residence, status = 'מעדיף/ה לא לענות', DateOfBirth, profileImage = "https://cdn.iconscout.com/icon/free/png-512/free-profile-3484746-2917913.png" } = req.body;
+        let { name, email, password, recycPrefs, residence, status, DateOfBirth, profileImage } = req.body;
         //
+		status = status || 'מעדיף/ה לא לענות'; // Use default if status is empty or null
+        profileImage = profileImage || "https://cdn.iconscout.com/icon/free/png-512/free-profile-3484746-2917913.png"; // Use default if profileImage is empty or null
+		//
         let data = await UserModel.Register(name, email, password, "", recycPrefs, residence, status, DateOfBirth, profileImage, 0, accountCreated);
         //
         res.status(201).json({msg: "Registration Completed"});
@@ -17,6 +20,8 @@ UsersRoute.post('/register', async (req, res) => {
         res.status(500).json({ error });
     }
 });
+
+
 
 ////////////////////////////////////////////////
 ///////////////////   LOGIN   //////////////////
