@@ -1,6 +1,8 @@
 // const path = require('node:path');
 require('dotenv').config();
 
+const bcrypt = require('bcrypt');
+
 const cors = require('cors');
 const express = require('express');
 const PORT = process.env.PORT || 5500;

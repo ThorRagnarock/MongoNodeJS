@@ -7,7 +7,10 @@ class DB {
 
 	constructor() {
 		this.db_uri = "mongodb+srv://rList1_user:ouzQZL4j8sZrdUJT@cluster0.aykx1sy.mongodb.net/?retryWrites=true&w=majority";
-		this.db_name = "_recycliST";
+		//process.env.db_uri;
+		//
+		this.db_name = "_recycliST";//process.env.db_name;
+		//
 		this.client = new MongoClient(this.db_uri)
 	}
 
