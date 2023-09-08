@@ -1,7 +1,6 @@
 const DB = require('../utils/db')
 const bcrypt = require('bcrypt');
 
-
 class User {
 	_id; name; email; password; passwordResetToken;
 	recycPrefs; residence;
@@ -43,39 +42,47 @@ class User {
 	static async Login(email, password) {
 		try {
 			let query = { email: email }
-			//let user = this.FindByEmail(u => u.email == email) //will work?
 			let user = await new DB().FindOne('users', query);
-
 			console.log({ user });
 			if (!user || !(await bcrypt.compare(password, user.password)))
 				return null;
-			
-			//res.status(200).json({ msg: "login succesful" })
-			//return {...user}
-			return user;
+
+			return {
+				_id: user._id,
+				name: user.name,
+				email: user.email,
+				password: user.password,
+				passwordResetToken: user.passwordResetToken,
+				recycPrefs: user.recycPrefs,
+				residence: user.residence,
+				status: user.status,
+				DateOfBirth: user.DateOfBirth,
+				profileImage: user.profileImage,
+				points: user.points,
+				accountCreated: user.accountCreated,
+				shoppingLists: user.shoppingLists,
+				achievements: user.achievements,
+				badges: user.badges,
+			};
 		} catch (error) {
 			res.status(500).json({ error });
 		}
 	}
 	////////////////////////////////////////////////
-
 	static async FindAllUsers() {
 		let query = {}
 		let project = {}
 		return await new DB().FindAll('users');
 	}
-
 	static async FindByEmail(email) {
 		let query = { "email": { $regex: new RegExp(`^${email}$`, 'i') } }
 		return await new DB().FindAll('users', query);
 	}
-
+	
 	static async UpdateUserDetails(id, doc) {
 		return await new DB().UpdateById('users', id, doc)
 	}
 }
-
-
 module.exports = User;
 
 // module.exports = Admin;

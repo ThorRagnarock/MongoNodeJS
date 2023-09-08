@@ -4,7 +4,6 @@ class DB {
 	db_uri;
 	db_name;
 	client;
-
 	constructor() {
 		this.db_uri = process.env.DB_URI;
 		//
@@ -12,8 +11,6 @@ class DB {
 		//
 		this.client = new MongoClient(this.db_uri)
 	}
-
-
 	//פעולות שליפה - GET
 	async FindAll(collection, query = {}, project = {}) {
 		try {
@@ -38,7 +35,6 @@ class DB {
 			await this.client.close();		//DIS-CONNECTING
 		}
 	}
-
 	//פעולות יצירה - POST
 	async Insert(collection, doc) {
 		try {
@@ -51,7 +47,6 @@ class DB {
 			await this.client.close();		//DIS-CONNECTING
 		}
 	}
-
 	//פעוולות עדכון - PUT
 	async UpdateById(collection, id, doc) {
 		try {
@@ -68,8 +63,18 @@ class DB {
 			await this.client.close();		//DIS-CONNECTING
 		}
 	}
+	async CountDocs(collection, query={}) {
+		try {
+			await this.client.connect();
+			return await this.client.db(this.db_name).collection(collection).countDocuments(query);
 
-
+		} catch (error) {
+			throw (error);
+		}
+		finally {
+			await this.client.close();
+		}
+	}
 	//TODO: create a function that concatenate object to form a list
 	//TODO: create a function that removes objects from a list
 	//TODO: create an function that is cross-referncing from 6 different
