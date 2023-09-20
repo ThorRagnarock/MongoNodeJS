@@ -47,15 +47,26 @@ class DB {
 			await this.client.close();		//DIS-CONNECTING
 		}
 	}
+
+	async Drop(collection) {
+		try {
+			await this.client.connect();
+			return this.client.db(this.db_name).collection(collection).drop();
+		} catch (error) {
+			throw(error);
+		}
+		finally {
+			await this.client.close();
+		}
+	}
 	//פעוולות עדכון - PUT
-	async UpdateById(collection, id, doc) {
+	async UpdateById(collection, id, doc) {  //updating USER fields 
 		try {
 			await this.client.connect();	//CONNECTING 
 			console.log(collection);
 			return await this.client.db(this.db_name).collection(collection).updateOne(
 				{ _id: new ObjectId(id) },
 				{ $set: doc });
-
 		} catch (error) {
 			throw error;
 		}
@@ -63,7 +74,7 @@ class DB {
 			await this.client.close();		//DIS-CONNECTING
 		}
 	}
-	async CountDocs(collection, query={}) {
+	async CountDocs(collection, query = {}) {
 		try {
 			await this.client.connect();
 			return await this.client.db(this.db_name).collection(collection).countDocuments(query);
@@ -75,11 +86,45 @@ class DB {
 			await this.client.close();
 		}
 	}
-	//TODO: create a function that concatenate object to form a list
-	//TODO: create a function that removes objects from a list
-	//TODO: create an function that is cross-referncing from 6 different
-}
 
+	async Aggregation(collection, agg) {
+		try {
+			await this.client.connect();
+			return await this.client.db(this.db_name).collection(collection).aggregate(agg).toArray();
+		} catch (error) {
+			throw(error);
+		}
+		finally{
+			await this.client.close();
+		}
+	}
+
+	async AddCollection(listingHeader) {	//to be used with listings
+		try {
+			await this.client.connect();
+			const tempName = `temporaryListing`;
+			const tempColName = await this.client.db(this.db_name).createCollection(tempName);
+			// const tempCollection =  this.client.db.collection(tempName);
+			const result = await tempColName.insertOne(listingHeader);
+			const headerID = result.insertedId;
+			const updatedColName = `listing_${headerID}`;
+			await this.client.db(this.db_name).renameCollection(tempColName, updatedColName);
+		} catch (error) {
+			throw (error);
+		} finally {
+			await this.client.close();
+		}
+	}
+
+	//async AppendListItem()
+
+
+	//TODO: create a function that concatenate object to form a list // I am not sure if I have a need for that anymore...
+	//TODO: create a function that removes objects from a list
+	//DONE? create an function that is cross-referncing from 6 different (I am pretty sure I got that one with agg)
+
+	//TODO: Create a listing header
+}
 module.exports = DB;
 
 //"mongodb://localhost:27017"; //

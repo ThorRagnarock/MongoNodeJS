@@ -31,5 +31,13 @@ GroceryRoute.get('/:colorCode/:conditionFilter', async (req, res) => {
 		res.status(500).json({error});
 	}
 });
-
+GroceryRoute.post('/', async (req, res)=> {
+	try {
+		let { groceryString } = req.body;
+		let data = await GroceryModel.PackMaterials(groceryString)
+	} catch (error) {
+		res.status(500).json({error});
+	}
+})
+// Grocer
 module.exports = GroceryRoute;

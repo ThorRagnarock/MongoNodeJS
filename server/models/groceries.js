@@ -31,12 +31,44 @@ class Groceries {
 	static async GetRelationGroceries(colorCode, conditionFilter) {
 		let query = { "colorCode": colorCode, "conditionFilter": conditionFilter }
 		//console.log(query);
-		let  packagingSection = await new DB().FindAll('groceries', { "colorCode": colorCode });		
+		let packagingSection = await new DB().FindAll('groceries', { "colorCode": colorCode });
 		packagingSection = packagingSection[0];
 		const filteredGroceries = packagingSection.product.filter(product => {
 			return conditionFilter ? !product.startsWith('!') : product.startsWith('!');
 		})
 		return { product: filteredGroceries };//...packagingSection, 
+	}
+
+	static async PackMaterials(groceryString) {
+		const inputWords = groceryString.split(',').map(str => str.trim().split(' ')).flat();
+		const agg = [
+			{
+				$match: { descriptor: { $ne: "conjunctions" }, },
+			},
+			{
+				$addFields: {
+					exclude: {
+						$function: {
+							body: `function(product, inputWords) {
+										for (const word of product) {
+										  if (word.startsWith('!') && inputWords.includes(word.substring(1))) {
+											return true;
+										  }
+										}
+										return false;
+									  }`,
+							args: ["$product", inputWords],
+							lang: "js",
+						},
+					},
+				},
+			},
+			{
+				$match: { exclude: false, },
+			},
+		];
+		const packagingMeterials = await new DB().Aggregation('groceries', agg)
+		console.log(JSON.stringify(packagingMeterials));
 	}
 
 }
