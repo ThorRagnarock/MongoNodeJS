@@ -11,7 +11,7 @@ ShoppinglistRoute.get('/', async (req, res) => {
 	}
 })
 ShoppinglistRoute.get('/:userID', async (req, res) => {
-	try {
+	try { //I don't know why
 		let { userID } = req.params;
 		let data = await ShoppinglistModel.AllUserLists(userID);
 		res.status(200).json(data);
@@ -20,12 +20,47 @@ ShoppinglistRoute.get('/:userID', async (req, res) => {
 	}
 })
 
-ShoppinglistRoute.put('/')
+ShoppinglistRoute.put('/', async (req, res) => {
+	try {
+		let { itemId } = req.body;//that's not true.. the list item get itself from the document itself.. but how can I do that?
+
+
+		//Like I did earlier I need first to CREATE the listItem itself, 
+		// and then: work out it's id
+		// and THEN - put that id in the 'listItems' array here.
+		
+
+	} catch (error) {
+		res.status(500).json({error})
+	}
+})
+// TODO : add listItems in a "put" method
+
+ShoppinglistRoute.put('/', async (req, res) => {
+	try {	//the thing will be set to update once before the thing is closed..
+		let { id } = req.params;
+		let { listName, listType, archivedStatus, pinned, listColor } = req.body;
+
+		let updatedObject = {};
+		if (listName) updatedObject.listName = listName
+		if (listType) updatedObject.listType = listType
+		if (archivedStatus) updatedObject.archivedStatus = archivedStatus;
+		if (pinned) updatedObject.pinned = pinned;
+		if (listColor) updatedObject.listColor = listColor;
+
+		let data = await ShoppinglistModel.UpdateListingDetails(id, updatedObject);
+		res.status(200).json(data);
+
+	} catch (error) {
+		res.status(500).json({ error });
+	}
+})
 
 ShoppinglistRoute.post('/', async (req, res) => {
 	try {
-		let { listName, userID } = req.body; //where do I grab the userID from... 
-		let data = await ShoppinglistModel.RegNewListing(listName, userID);
+		let { id } = req.params;
+		let { listName } = req.body; //where do I grab the userID from... 
+		let data = await ShoppinglistModel.RegNewListing(listName, id);
 		res.status(200).json(data);
 	} catch (error) {
 		res.status(500).json({ error });

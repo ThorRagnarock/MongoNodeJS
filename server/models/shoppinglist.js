@@ -7,6 +7,7 @@ class ShoppingList {
 	archivedStatus; //archived, strikedthrough       
 	pinned;
 	listItems;	//referenced list of items
+	listColor;
 	static count = 1;
 
 	constructor(userID, listName) {
@@ -19,6 +20,8 @@ class ShoppingList {
 		this.archivedStatus = false;
 		this.pinned = false;
 		this.listItems = [];
+		if (!listColor || listColor.trim() === '') { this.listColor = "#D9D9D9"; }
+		else { this.listColor = this.listColor; }
 	}
 	//פעולות שליפה
 	static async FindAllShoppingLists() {
@@ -45,7 +48,7 @@ class ShoppingList {
 	}
 
 	static async UpdateListingDetails(id, doc) {
-		
+
 	}
 
 }
