@@ -23,6 +23,8 @@ class ShoppingList {
 		if (!listColor || listColor.trim() === '') { this.listColor = "#D9D9D9"; }
 		else { this.listColor = this.listColor; }
 	}
+
+	//create a new list??
 	//פעולות שליפה
 	static async FindAllShoppingLists() {
 		return await new DB().FindAll('shoppingList');

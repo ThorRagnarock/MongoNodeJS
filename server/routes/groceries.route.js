@@ -28,13 +28,24 @@ GroceryRoute.get('/:colorCode/:conditionFilter', async (req, res) => {
 		let data = await GroceryModel.GetRelationGroceries(colorCode, isTrue);
 		res.status(200).json(data);
 	} catch (error) {
-		res.status(500).json({error});
+		res.status(500).json({ error });
 	}
 });
-GroceryRoute.post('/', async (req, res)=> {
+GroceryRoute.post('/', async (req, res) => { //working just with new list?
 	try {
 		let { groceryString } = req.body;
 		let data = await GroceryModel.PackMaterials(groceryString);
+		res.status(200).json(data);
+	} catch (error) {
+		res.status(500).json({ error });
+	}
+});
+
+GroceryRoute.post('/add-item/:collectionName', async (req, res) => {
+	try {
+		let collectionName = req.params.collectionName;
+		let { userItemStr } = req.body;
+		let data = await GroceryModel.CreateListItem(collectionName, userItemStr);
 		res.status(200).json(data);
 	} catch (error) {
 		res.status(500).json({error});
