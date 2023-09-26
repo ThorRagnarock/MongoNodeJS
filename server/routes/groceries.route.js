@@ -48,8 +48,35 @@ GroceryRoute.post('/add-item/:collectionName', async (req, res) => {
 		let data = await GroceryModel.CreateListItem(collectionName, userItemStr);
 		res.status(200).json(data);
 	} catch (error) {
-		res.status(500).json({error});
+		res.status(500).json({ error });
 	}
+});
+
+GroceryRoute.put('/:itemId', async(req,res)=>{ //
+	let itemId = req.params.itemId;
+
 })
+GroceryRoute.put('/feedback/:collectionName/:itemId', async (req, res) => {
+	try {
+		let collectionName = req.params.collectionName;
+		let itemId = req.params.itemId;
+		let { feedbackText } = req.body;
+		let data = await GroceryModel.CreateItemFeedback(collectionName, itemId, feedbackText);
+		res.status(200).json(data);
+	} catch (error) {
+		res.status(500).json({ error })
+	}
+});
+GroceryRoute.delete('/remove/:collectionName/:itemId', async(req, res)=>{
+	try {
+		let collectionName = req.params.collectionName;
+		let itemId = req.params.itemId;
+		let data = await GroceryModel.DeleteListItem(collectionName, itemId);
+		res.status(200).json(data);
+	} catch (error) {
+		res.status(500).json({ error })
+	}
+});
+
 // Grocer
 module.exports = GroceryRoute;

@@ -1,4 +1,5 @@
 const DB = require('../utils/db')
+const { ObjectId } = require('mongodb');
 
 class Groceries {
 	// static indexIdCounter = 0;
@@ -16,17 +17,17 @@ class Groceries {
 		this.userItemStr = userItemStr;
 		this.tickToggle = false;
 		this.groceryPoints = {};
-		this.feedbackFlag = false;
-		this.userFeedback = "";
 		this.packaging = {};
 		this.colorCodes = {};
 		this.lastIndex = {};
+		this.feedbackFlag = false;
+		this.userFeedback = "";
 
 		this.init();
 	}
 	async init() {
 		try {
-			const { packaging, colorCodes,groceryPoints, _id } = await this.PackMaterials(this.userItemStr);
+			const { packaging, colorCodes, groceryPoints, _id } = await this.PackMaterials(this.userItemStr);
 			this.packaging = packaging;
 			this.colorCodes = colorCodes;
 			this.groceryPoints = groceryPoints;
@@ -43,14 +44,13 @@ class Groceries {
 	//TODO : Create a new grocery document
 	static async CreateListItem(collectionName, userItemStr) {
 		let listItem = new Groceries(userItemStr);
-
 		let data = await new DB().Insert(collectionName, listItem);
 		let listItemId = data.insertedId;
 		await new DB().UpdateById(collectionName, listItemId, {
-			 packaging: listItem.packaging, 
-			 colorCodes: listItem.colorCodes, 
-			 groceryPoints: listItem.groceryPoints //that's the new value
-			});
+			packaging: listItem.packaging,
+			colorCodes: listItem.colorCodes,
+			groceryPoints: listItem.groceryPoints //that's the new value
+		});
 
 		return { data, listItemId };
 		//I need to enter pick the _id out of here and to send it to the array in the list
@@ -68,10 +68,10 @@ class Groceries {
 	}
 
 	static async GetRelationGroceries(colorCode, conditionFilter) {
-		let query = { 
-			"colorCode": colorCode, 
+		let query = {
+			"colorCode": colorCode,
 			"conditionFilter": conditionFilter
-		 }
+		}
 		let packagingSection = await new DB().FindAll('groceries', { "colorCode": colorCode });
 		packagingSection = packagingSection[0];
 		const filteredGroceries = packagingSection.product.filter(product => {
@@ -129,14 +129,13 @@ class Groceries {
 					}
 				}
 			}
-
 		];
 		// TODO: points - remoember to count the colors in order to return points
 		const packagingMaterials = await new DB().Aggregation('groceries', agg);
 
-		const [{ packaging, colorCodes,groceryPoints, _id }] = packagingMaterials;
-		console.log({ packaging, colorCodes,groceryPoints, _id });
-		return { packaging, colorCodes,groceryPoints, _id };
+		const [{ packaging, colorCodes, groceryPoints, _id }] = packagingMaterials;
+		console.log({ packaging, colorCodes, groceryPoints, _id });
+		return { packaging, colorCodes, groceryPoints, _id };
 	}
 
 	static async InitIndexCount() {
@@ -147,7 +146,29 @@ class Groceries {
 		} catch (error) {
 			console.error(error);
 		}
+	}// MAYBE I HAVE TO RETHINK IT....
+
+	static async CreateItemFeedback(collectionName, itemId, feedbackText) {
+		const query = {
+			feedbackFlag: true,
+			userFeedback: feedbackText
+		}
+		return await new DB().UpdateById(collectionName, itemId, query);
 	}
+
+	static async TickToggle(collection, itemId, paramName) {
+		const filter = { _id: new ObjectId(itemId) };
+		const doc = await this.FindOne(collection, filter);
+		const turnedValue = !doc[paramName];
+
+		let data = { $set: { [paramName]: turnedValue } };
+		return await new DB().UpdateById(collection, itemId, data);
+	}
+
+	static async DeleteListItem(collectionName, itemId) {
+		return await new DB().Delete(collectionName, itemId);
+	}
+
 }
 
 module.exports = Groceries;

@@ -17,43 +17,7 @@ ShoppinglistRoute.get('/:userID', async (req, res) => {
 		res.status(200).json(data);
 	} catch (error) {
 		res.status(500).json({ error });
-	}
-})
-
-ShoppinglistRoute.put('/', async (req, res) => {
-	try {
-		let { itemId } = req.body;//that's not true.. the list item get itself from the document itself.. but how can I do that?
-
-
-		//Like I did earlier I need first to CREATE the listItem itself, 
-		// and then: work out it's id
-		// and THEN - put that id in the 'listItems' array here.
-		
-
-	} catch (error) {
-		res.status(500).json({error})
-	}
-})
-// TODO : add listItems in a "put" method
-
-ShoppinglistRoute.put('/', async (req, res) => {
-	try {	//the thing will be set to update once before the thing is closed..
-		let { id } = req.params;
-		let { listName, listType, archivedStatus, pinned, listColor } = req.body;
-
-		let updatedObject = {};
-		if (listName) updatedObject.listName = listName
-		if (listType) updatedObject.listType = listType
-		if (archivedStatus) updatedObject.archivedStatus = archivedStatus;
-		if (pinned) updatedObject.pinned = pinned;
-		if (listColor) updatedObject.listColor = listColor;
-
-		let data = await ShoppinglistModel.UpdateListingDetails(id, updatedObject);
-		res.status(200).json(data);
-
-	} catch (error) {
-		res.status(500).json({ error });
-	}
+	} //I need to get inside each collection and from there look if they have a header document, and if they do I am checking the userID inside of them  
 })
 
 ShoppinglistRoute.post('/', async (req, res) => {
@@ -66,8 +30,46 @@ ShoppinglistRoute.post('/', async (req, res) => {
 		res.status(500).json({ error });
 	}
 });
-//FindAllShoppingLists, AllUserLists
-ShoppinglistRoute.post('/', async (req, res)=> { //CRUD DELETER
+ShoppinglistRoute.post('/createList', async (req, res) => {
+	try {
+		const { userID, listingHeader, listColor } = req.body;
+		let data = await ShoppinglistModel.CreateNewList(userID, listingHeader, listColor);
+		res.status(200).json(data);
+	} catch (error) {
+		res.status(500).json({error});
+	}
+})
+//toggle boolean parameters
+ShoppinglistRoute.put('/toggleParam/:itemId', async (req, res) => {
+	try {
+		let { itemId } = req.params;
+		let {paramName, userID, collectionName} = req.body;
+		let data = await ShoppinglistModel.paramToggle(collectionName, itemId, paramName, userID);
+		res.status(200).json(data);
+	} catch (error) {
+		res.status(500).json({error})
+	}
+})
+//update info in regular fields
+ShoppinglistRoute.put('/', async (req, res) => {
+	try {	//the thing will be set to update once before the thing is closed..
+		let { id } = req.params;
+		let { listName, listType, listColor } = req.body;
+		let updatedObject = {};
+		if (listName) updatedObject.listName = listName
+		if (listType) updatedObject.listType = listType
+		if (listColor) updatedObject.listColor = listColor;
+
+		let data = await ShoppinglistModel.UpdateListingDetails(id, updatedObject);
+		res.status(200).json(data);
+
+	} catch (error) {
+		res.status(500).json({ error });
+	}
+})
+
+//delete a single document
+ShoppinglistRoute.delete('/', async (req, res)=> { //CRUD DELETER
 	try {
 		let { listName } = req.body;
 		let data = await ShoppinglistModel.DeleteList(listName);

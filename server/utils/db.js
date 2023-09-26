@@ -19,8 +19,7 @@ class DB {
 		}
 		catch (error) {
 			throw error;
-		}
-		finally {
+		} finally {
 			await this.client.close();		//DIS-CONNECTING
 		}
 	}
@@ -30,10 +29,9 @@ class DB {
 			return await this.client.db(this.db_name).collection(collection).findOne(query, project);
 		} catch (error) {
 			throw error;
-		}
-		finally {
+		} finally {
 			await this.client.close();		//DIS-CONNECTING
-		}
+		}	
 	}
 	//פעולות יצירה - POST
 	async Insert(collection, doc) {
@@ -42,20 +40,29 @@ class DB {
 			return await this.client.db(this.db_name).collection(collection).insertOne(doc);
 		} catch (error) {
 			throw error;
-		}
-		finally {
-			await this.client.close();		//DIS-CONNECTING
+		} finally {
+			await this.client.close();
 		}
 	}
 
+	async Delete(collection, itemId) { //delete a single item
+		try {
+			await this.client.connect();
+			let filter = { _id: new ObjectId(itemId) };
+			return this.client.db(this.db_name).collection(collection).deleteOne(filter);
+		} catch (error) {
+			throw(error)
+		} finally {
+			await this.client.close();
+		}
+	}
 	async Drop(collection) {
 		try {
 			await this.client.connect();
 			return this.client.db(this.db_name).collection(collection).drop();
 		} catch (error) {
-			throw(error);
-		}
-		finally {
+			throw (error);
+		} finally {
 			await this.client.close();
 		}
 	}
@@ -69,20 +76,28 @@ class DB {
 				{ $set: doc });
 		} catch (error) {
 			throw error;
-		}
-		finally {
+		} finally {
 			await this.client.close();		//DIS-CONNECTING
+		}
+	}
+
+	async CreateCollection(collection) {
+		try {
+			await this.client.connect();
+			return await this.client.db(this.db_name).createCollection(collection, { capped: true, max: 64 });
+		} catch (error) {
+			throw (error);
+		} finally {
+			await this.client.close();
 		}
 	}
 	async CountDocs(collection, query = {}) {
 		try {
 			await this.client.connect();
 			return await this.client.db(this.db_name).collection(collection).countDocuments(query);
-
 		} catch (error) {
 			throw (error);
-		}
-		finally {
+		} finally {
 			await this.client.close();
 		}
 	}
@@ -92,29 +107,23 @@ class DB {
 			await this.client.connect();
 			return await this.client.db(this.db_name).collection(collection).aggregate(agg).toArray();
 		} catch (error) {
-			throw(error);
-		}
-		finally{
+			throw (error);
+		} finally {
 			await this.client.close();
 		}
 	}
-
-	async AddCollection(listingHeader) {	//to be used with listings
+	async RenameCollection(oldCollectioName, newCollectionName) {
 		try {
 			await this.client.connect();
-			const tempName = `temporaryListing`;
-			const tempColName = await this.client.db(this.db_name).createCollection(tempName);
-			// const tempCollection =  this.client.db.collection(tempName);
-			const result = await tempColName.insertOne(listingHeader);
-			const headerID = result.insertedId;
-			const updatedColName = `listing_${headerID}`;
-			await this.client.db(this.db_name).renameCollection(tempColName, updatedColName);
+			await this.client.db(this.db_name).oldCollectioName.renameCollection(newCollectionName);
 		} catch (error) {
 			throw (error);
 		} finally {
 			await this.client.close();
 		}
 	}
+
+
 
 	//async AppendListItem()
 
@@ -128,3 +137,20 @@ class DB {
 module.exports = DB;
 
 //"mongodb://localhost:27017"; //
+
+
+// async AddCollection(listingHeader) {	//to be used with listings
+// 	try {
+// 		//const tempName = `temporaryListing`;
+// 		//const tempColName = await this.client.db(this.db_name).createCollection(tempName);
+// 		//// const tempCollection =  this.client.db.collection(tempName);
+// 		// const result = await tempColName.insertOne(listingHeader);
+// 		// const headerID = result.insertedId;
+// 		// const updatedColName = `listing_${headerID}`;
+// 		await this.client.db(this.db_name).renameCollection(tempColName, updatedColName);
+// 	} catch (error) {
+// 		throw (error);
+// 	} finally {
+// 		await this.client.close();
+// 	}
+// }
