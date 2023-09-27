@@ -1,4 +1,5 @@
 const { MongoClient, ObjectId } = require('mongodb');		//rList1_user  //ouzQZL4j8sZrdUJT
+const { ObjectId } = require('mongodb');
 
 class DB {
 	db_uri;
@@ -112,45 +113,51 @@ class DB {
 			await this.client.close();
 		}
 	}
-	async RenameCollection(oldCollectioName, newCollectionName) {
+	async RenameCollection(oldCollectionName, newCollectionName) {
 		try {
 			await this.client.connect();
-			await this.client.db(this.db_name).oldCollectioName.renameCollection(newCollectionName);
+			const db = this.client.db(this.db_name);
+			const collection = db.collection(oldCollectionName)
+			await collection.renameCollection(newCollectionName);
 		} catch (error) {
 			throw (error);
 		} finally {
 			await this.client.close();
 		}
 	}
+	async DuplicateCollection(originCollectionName, newExt) {
+		let userId;
+		const originCollection = this.client.db(this.db_name).collection(originCollectionName);
+		const docs = await this.FindAll(originCollectionName);
 
+		const newColName = new ObjectId().toString(); //(new id)
+
+		const headerDoc = await this.FindOne(originCollection,{ isHeader: true });
+		if (headerDoc) {
+			userId = headerDoc.userId;
+			headerDoc.listName = `${headerDoc.listName}(${newExt})`;
+		}
+
+		const duplicatedCollectionName = `${newColName}_${userId}`;
+		const duplicateCollection = this.client.db(this.db_name).collection(duplicatedCollectionName);
+
+		await duplicateCollection.insertMany(docs);
+
+		console.log(`Duplicated ${originCollectionName} to ${duplicatedCollectionName} with new listName`);
+		return duplicateCollection;
+
+	}
 
 
 	//async AppendListItem()
 
 
-	//TODO: create a function that concatenate object to form a list // I am not sure if I have a need for that anymore...
-	//TODO: create a function that removes objects from a list
+	//DONE : create a function that concatenate object to form a list // I am not sure if I have a need for that anymore... (both in the list and both in the item level)
+	//DONE: create a function that removes objects from a list (both in the list and both in the item level)
 	//DONE? create an function that is cross-referncing from 6 different (I am pretty sure I got that one with agg)
 
-	//TODO: Create a listing header
+	//DONE: Create a listing header
 }
 module.exports = DB;
 
 //"mongodb://localhost:27017"; //
-
-
-// async AddCollection(listingHeader) {	//to be used with listings
-// 	try {
-// 		//const tempName = `temporaryListing`;
-// 		//const tempColName = await this.client.db(this.db_name).createCollection(tempName);
-// 		//// const tempCollection =  this.client.db.collection(tempName);
-// 		// const result = await tempColName.insertOne(listingHeader);
-// 		// const headerID = result.insertedId;
-// 		// const updatedColName = `listing_${headerID}`;
-// 		await this.client.db(this.db_name).renameCollection(tempColName, updatedColName);
-// 	} catch (error) {
-// 		throw (error);
-// 	} finally {
-// 		await this.client.close();
-// 	}
-// }

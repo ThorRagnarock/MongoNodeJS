@@ -2,16 +2,19 @@ const DB = require('../utils/db')
 const { ObjectId } = require('mongodb');
 
 class ShoppingList {
-	userID;	//TODO: find/make a way to grab that
+	isHeader;
+	userID;	//make a way to grab that (done, through the frontend)
 	listName; //not a must
 	listType; //not a must
-	archivedStatus; //archived, strikedthrough       
+	archivedStatus; //archived, (strikedthrough in the frontend)
 	pinned;
 	listItems;	//referenced list of items
 	listColor;
 	static count = 1;
-
+	
+	//header document constructor
 	constructor(userID, listName, listColor = "#D9D9D9") {
+		this.isHeader = true;//not to be touched under any circumstances
 		this.userID = userID;
 		if (!listName || listName.trim() === '') {
 			this.listName = `רשימה ${ShoppingList.count}`;
@@ -23,7 +26,6 @@ class ShoppingList {
 		this.listItems = [];
 		this.listColor = listColor;
 	}
-
 	static async CreateNewList(listingHeader, userID) {
 		//creating an object
 		let listing = new ShoppingList(userID, listingHeader);
@@ -37,9 +39,9 @@ class ShoppingList {
 		//
 		//creating the new collection name
 		const headerID = result.insertedId;
-		const updatedColName = `${headerID}_${userID}`;
+		const collectionName = `${headerID}_${userID}`;
 		//renaming the collection
-		await new DB().RenameCollection(tempName, updatedColName);
+		await new DB().RenameCollection(tempName, collectionName);
 	}
 
 	//פעולות שליפה
@@ -53,14 +55,13 @@ class ShoppingList {
 		return await new DB().FindAll('shoppingList', query);
 	}
 /////////////////////////////////////////
-	static async DeleteList(listName) {
-		return await new DB().Drop(listName);
+	static async DeleteList(collectionName) {
+		return await new DB().Drop(collectionName);
 	}
 
-
+//update name, type and color (in that order)
 	static async UpdateListingDetails(collection, userID, doc) {
-		return await new DB().UpdateById(collection, userId, doc)
-		//update name, type and color (in that order)
+		return await new DB().UpdateById(collection, userId, doc);
 	}
 
 	static async paramToggle(collection, itemId, paramName, userID) { //pinned/archivedStatus toggle
@@ -81,6 +82,8 @@ class ShoppingList {
 		}
 		return await new DB().UpdateById(collection, itemId, data);
 	}
+
+
 }
 
 module.exports = ShoppingList;

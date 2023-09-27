@@ -59,10 +59,8 @@ ShoppinglistRoute.put('/', async (req, res) => {
 		if (listName) updatedObject.listName = listName
 		if (listType) updatedObject.listType = listType
 		if (listColor) updatedObject.listColor = listColor;
-
 		let data = await ShoppinglistModel.UpdateListingDetails(id, updatedObject);
 		res.status(200).json(data);
-
 	} catch (error) {
 		res.status(500).json({ error });
 	}
