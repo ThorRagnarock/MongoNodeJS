@@ -11,7 +11,7 @@ class ShoppingList {
 	listItems;	//referenced list of items
 	listColor;
 	static count = 1;
-	
+
 	//header document constructor
 	constructor(userID, listName, listColor = "#D9D9D9") {
 		this.isHeader = true;//not to be touched under any circumstances
@@ -43,25 +43,33 @@ class ShoppingList {
 		//renaming the collection
 		await new DB().RenameCollection(tempName, collectionName);
 	}
-
 	//פעולות שליפה
 	//those two below are wrong
-	static async FindAllShoppingLists() {
-		return await new DB().FindAll('shoppingList');
-	}
-	// that's more like for the admin, I think
-	static async AllUserLists(userID) {
-		let query = { "userID": userID }
-		return await new DB().FindAll('shoppingList', query);
-	}
-/////////////////////////////////////////
+	// static async FindAllShoppingLists() {
+	// 	return await new DB().FindAll('shoppingList');
+	// }
+	// // that's more like for the admin, I think
+	// static async AllUserLists(userID) {
+	// 	let query = { "userID": userID }
+	// 	return await new DB().FindAll('shoppingList', query);
+	// }
+	/////////////////////////////////////////
+	/////////////////////////////////////////
 	static async DeleteList(collectionName) {
 		return await new DB().Drop(collectionName);
 	}
 
-//update name, type and color (in that order)
+	//update name, type and color (in that order)
 	static async UpdateListingDetails(collection, userID, doc) {
 		return await new DB().UpdateById(collection, userId, doc);
+	}
+
+	static async DuplicateList(collectionName, listNameExtention){
+		return await new DB().DuplicateCollection(collectionName, listNameExtention);
+	}
+
+	static async MailShareListing(collectionName, emailAddress){
+		return await new DB().fetchAndMailListing(collectionName, emailAddress);
 	}
 
 	static async paramToggle(collection, itemId, paramName, userID) { //pinned/archivedStatus toggle
@@ -82,8 +90,6 @@ class ShoppingList {
 		}
 		return await new DB().UpdateById(collection, itemId, data);
 	}
-
-
 }
 
 module.exports = ShoppingList;
