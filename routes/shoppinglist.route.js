@@ -23,6 +23,16 @@ ShoppinglistRoute.get('/:userID/lists', async (req, res) => {
 		res.status(500).json({ error });
 	} //I need to get inside each collection and from there look if they have a header document, and if they do I am checking the userID inside of them  
 })//items in specific list - serves both groceries and shoppingList
+ShoppinglistRoute.get('/SearchListings/:userID', async(req,res)=>{
+	try {
+		let userID = req.params.userID;
+		let { searchString } = req.body;
+		let data = await ShoppinglistModel.SearchUserListings(userID, searchString);
+		res.status(200).json(data);
+	} catch (error) {
+		res.status(500).json({error});
+	}
+})
 ShoppinglistRoute.get('/:collectionName/allListItems/', async (req, res) => {v
 	try {
 		let { collectionName } = req.params.collectionName;

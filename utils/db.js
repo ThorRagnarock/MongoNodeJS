@@ -86,12 +86,12 @@ class DB {
 	}
 
 	//collectionName -> headerId, pushedValue (what about parameter???)
-	async PushById(collection, id, item) {
+	async PushById(collection, id, field, item) {
 		try {
-			await this.client.connect(); 
+			await this.client.connect();
 			return await this.client.db(this.db_name).collection(collection).updateOne(
 				{ _id: new ObjectId(id) },
-				{ $push: { listItems: item } }
+				{ $push: { [field]: item } }
 			);
 		} catch (error) {
 			throw error;
@@ -100,12 +100,12 @@ class DB {
 		}
 	}
 
-	async PullById(collection, id, item) {
+	async PullById(collection, id, field, item) {
 		try {
 			await this.client.connect(); 
 			return await this.client.db(this.db_name).collection(collection).updateOne(
 				{ _id: new ObjectId(id) },
-				{ $pull: { listItems: item } }
+				{ $pull: { [field]: item } }
 			);
 		} catch (error) {
 			throw error;
@@ -174,6 +174,34 @@ class DB {
 			await this.client.close();
 		}
 	}
+	async AggregateUserSearchListings(userID, searchString) {
+		const agg = [
+			{ 	$match: { _id: ObjectId(userID) }	},
+			{ 	$unwind: "$shoppingLists"			},
+			{
+				$lookup: {
+					from: "shoppingList",
+					localField: "shoppingLists",
+					foreignField: "_id",
+					as: "listDetails"
+				}
+			},
+			{
+				$match: { "listDetails.listName": { $regex: searchString, $options: 'i' } }
+			},
+			{ 	$project: { "listDetails": 1 }		}
+		];
+
+		try {
+			await this.client.connect();
+			return await this.client.db(this.db_name).collection('users').aggregate(agg).toArray();
+
+		} catch (error) {
+			throw (error);
+		}finally {
+			await this.client.close();
+		}
+	}
 	async RenameCollection(oldCollectionName, newCollectionName) {
 		try {
 			console.log("old col. name:", oldCollectionName, ", new col name:", newCollectionName);
@@ -207,7 +235,6 @@ class DB {
 		console.log(`Duplicated ${originCollectionName} to ${duplicatedCollectionName} with new listName`);
 		return duplicateCollection;
 	}
-	
 }
 module.exports = DB;
 

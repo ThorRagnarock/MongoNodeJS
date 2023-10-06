@@ -2,10 +2,21 @@ const DB = require('../utils/db')
 const bcrypt = require('bcrypt');
 
 class User {
-	_id; name; email; password; passwordResetToken;
-	recycPrefs; residence;
-	status; DateOfBirth; profileImage; points; accountCreated;
-	shoppingLists; achievements; badges;
+	_id; 
+	name; 
+	email; 
+	password; 
+	passwordResetToken;
+	recycPrefs; 
+	residence;
+	status; 
+	DateOfBirth; 
+	profileImage; 
+	points; 
+	accountCreated;
+	shoppingLists; 
+	achievements; 
+	badges;
 
 	constructor(name, email, password, passwordResetToken, recycPrefs, residence, status, DateOfBirth, profileImage, points, accountCreated, shoppingLists, achievements, badges) {
 		// this._id = _id;

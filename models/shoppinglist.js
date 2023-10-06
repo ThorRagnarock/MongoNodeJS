@@ -51,8 +51,12 @@ class ShoppingList {
 		//renaming the collection
 		await new DB().RenameCollection(tempName, collectionName);
 		console.log(".\n\nCreation of list Done..\n\n");
-	}
 
+		let queryUser = await new DB().FindOne('users', { _id: new ObjectId(userID) });
+		if (queryUser) {
+			await new DB().PushById('users', userID, 'shoppingLists', headerID);
+		}
+	}
 	//ROUTED
 	static async AggHeaderList(collectionName) {
 		const headerFileId = collectionName.split('_')[0];
@@ -74,19 +78,17 @@ class ShoppingList {
 		];
 		return await new DB().Aggregation(collectionName, agg);
 	}
-
-	///
 	//  ROUTED FROM GROCERIES.js   //
 	static async AppendListItem(collectionName, listItemId) {
 		const headerFileId = collectionName.split('_')[0];
 		console.log("headerFileID: ", headerFileId, ", listItemID:  ", listItemId, "\nFull collectionName: ", collectionName);
 
-		await new DB().PushById(collectionName, headerFileId, listItemId)
+        await new DB().PushById(collectionName, headerFileId, 'listItems', listItemId);
 	}
 	//  ROUTED FROM GROCERIES.js   //
 	static async RemoveListItem(collectionName, listItemId) {
 		const headerFileId = collectionName.split('_')[0];
-		await new DB().PullById(collectionName, headerFileId, listItemId)
+        await new DB().PullById(collectionName, headerFileId, 'listItems', listItemId);
 	}
 	//
 	static async DeleteList(collectionName) {
@@ -131,6 +133,10 @@ class ShoppingList {
 		}
 		table += `</table>`;
 		return table;
+	}
+
+	static async SearchUserListings(userID, searchString) {
+		return await new DB().AggregateUserSearchListings(userID, searchString);
 	}
 }
 
