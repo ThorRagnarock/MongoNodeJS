@@ -134,10 +134,14 @@ class DB {
 		}
 	}
 	async CountDocs(collection, query = {}) {
-			try {
+		try {
 			await this.client.connect();
-			return await this.client.db(this.db_name).collection(collection).countDocuments(query);
+			console.log("countDocs is connected");
+			const result = await this.client.db(this.db_name).collection(collection).countDocuments(query);
+			console.log("result: ", result);
+			return result;
 		} catch (error) {
+			console.log(error);
 			throw (error);
 		} finally {
 			await this.client.close();

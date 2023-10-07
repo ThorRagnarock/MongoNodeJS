@@ -14,11 +14,11 @@ class User {
 	profileImage; 
 	points; 
 	accountCreated;
-	shoppingLists; 
-	achievements; 
-	badges;
+	// shoppingLists; 
+	// achievements; 
+	// badges;
 
-	constructor(name, email, password, passwordResetToken, recycPrefs, residence, status, DateOfBirth, profileImage, points, accountCreated, shoppingLists, achievements, badges) {
+	constructor(name, email, password, passwordResetToken, recycPrefs, residence, status, DateOfBirth, profileImage, points, accountCreated) {
 		// this._id = _id;
 		this.profileImage = profileImage;
 		this.email = email;
@@ -33,9 +33,9 @@ class User {
 		this.points = points;
 		this.accountCreated = accountCreated;
 
-		this.shoppingLists = shoppingLists;	//array of lists, embeded
-		this.achievements = achievements;	//array of achievements
-		this.badges = badges;				//array of badges
+		this.shoppingLists = [];	//array of lists, embeded
+		this.achievements = [];	//array of achievements
+		this.badges = [];				//array of badges
 	}
 	////////////////////////////////////////////////
 	/////////////////// REGISTER ///////////////////

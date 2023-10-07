@@ -28,8 +28,9 @@ async function SendMail(table, listName, receiverEmailAddress) {
 async function ToggleParam(collection, itemId, paramName, pinLogic = null) {
 	const filter = { _id: new ObjectId(itemId) };
 	const doc = await new DB().FindOne(collection, filter);
+	console.log("\\root\\utils\\utils\\toggleParam...");
 
-	console.log("checking something...",filter, doc);
+	console.log("util\\tp filter, doc: ",filter, doc);
 	const turnedValue = !doc[paramName];
 
 
@@ -37,8 +38,10 @@ async function ToggleParam(collection, itemId, paramName, pinLogic = null) {
 
 
 	if (pinLogic && typeof pinLogic === 'function') {
-		return await pinLogic(doc, turnedValue);
+		console.log("call back pinLogic from shoppinglist.route");
+		return await pinLogic(paramName, turnedValue);
 	}
+
     return await new DB().UpdateById(collection, itemId, data);
 }
 

@@ -1,6 +1,7 @@
 
 const ShoppinglistRoute = require('express').Router();
 const ShoppinglistModel = require('../models/shoppinglist');
+const DB = require('../utils/db')
 
 const toggleParam = require('../utils/utils').ToggleParam;
 
@@ -84,16 +85,25 @@ ShoppinglistRoute.put('/toggleParam/:itemId', async (req, res) => {
 		const { itemId } = req.params;
 		const { paramName, collectionName } = req.body;
 
-		const pinLogic = async (paramName, turnedValue)=> {
-			if (paramName === 'pinned') {
-				let pinnedQuery = { "pinned": true, "userID": userID };
-				let pinnedCount = await new DB().CountDocs(collection, pinnedQuery);
+		const pinLogic = async (paramName, turnedValue) => {
+			console.log("Parameter: ", paramName);
+			if (paramName == 'pinned') {
+				console.log("pinned test PASSED.");
+				
+				let pinnedQuery = { "pinned": true };
+				console.log("count query:", pinnedQuery);
+				
+				let pinnedCount = await new DB().CountDocs(collectionName, pinnedQuery);
+				console.log("Pinned count is: ", pinnedCount);  // Debugging line
+				
 				if (pinnedCount >= 3 && turnedValue) {
 					return { status: 'failed', message: 'ניתן לנעוץ עד 3 רשימות בלבד' };
 				}
 			}
-			return null;
+			let data = { [paramName]: turnedValue };
+			return await new DB().UpdateById(collectionName, itemId, data);
 		};
+		
 		const result = await toggleParam(
 			collectionName, 
 			itemId, 
@@ -102,6 +112,7 @@ ShoppinglistRoute.put('/toggleParam/:itemId', async (req, res) => {
 			);
 		res.status(200).json(result);
 	} catch (error) {
+		console.log(error);
 		res.status(500).json({ error });
 	}
 });
@@ -138,3 +149,30 @@ ShoppinglistRoute.delete('/', async (req, res) => { //CRUD DELETER
 	}
 })
 module.exports = ShoppinglistRoute;
+
+
+
+		// console.log("Hello, toggling bools in param:", paramName);
+		// const pinLogic = async (paramName, turnedValue)=> {
+		// 	console.log("Parameter: ",paramName);
+		// 	if (paramName == 'pinned') {
+		// 		console.log("pinned test PASSED.");
+
+		// 		let pinnedQuery = { "pinned": true};
+		// 		console.log("count query:", pinnedQuery);
+
+		// 		let pinnedCount = await new DB().CountDocs(collectionName, pinnedQuery);
+
+		// 		if (pinnedCount >= 3 && turnedValue) {
+		// 			return { status: 'failed', message: 'ניתן לנעוץ עד 3 רשימות בלבד' };
+		// 		}
+		// 		console.log(3);
+
+		// 	}
+		// 	console.log("hello again!!!");
+		// 	let data =  { [paramName]: turnedValue } ;
+		// 	console.log(data);
+		// 	return await new DB().UpdateById(collectionName, itemId, data);
+
+		// 	return null;
+		// };
