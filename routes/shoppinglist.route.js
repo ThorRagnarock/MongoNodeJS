@@ -2,7 +2,7 @@
 const ShoppinglistRoute = require('express').Router();
 const ShoppinglistModel = require('../models/shoppinglist');
 
-const toggleParam = require('../utils/utils').toggleParam;
+const toggleParam = require('../utils/utils').ToggleParam;
 
 
 ////////////////   GET    ////////////////
@@ -77,6 +77,8 @@ ShoppinglistRoute.post('/duplicateList', async (req, res) => {
 })
 ////////////////   PUT    ////////////////
 //toggle boolean parameters
+
+
 ShoppinglistRoute.put('/toggleParam/:itemId', async (req, res) => {
 	try {
 		const { itemId } = req.params;
@@ -92,12 +94,22 @@ ShoppinglistRoute.put('/toggleParam/:itemId', async (req, res) => {
 			}
 			return null;
 		};
-		const result = await toggleParam(collectionName, itemId, paramName, pinLogic);
+		const result = await toggleParam(
+			collectionName, 
+			itemId, 
+			paramName, 
+			pinLogic
+			);
 		res.status(200).json(result);
 	} catch (error) {
 		res.status(500).json({ error });
 	}
 });
+
+
+
+
+
 
 //UPDATE info in regular fields
 ShoppinglistRoute.put('/:id', async (req, res) => {

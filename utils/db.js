@@ -11,7 +11,7 @@ class DB {
 		//
 		this.client = new MongoClient(this.db_uri)
 	}
-	//פעולות שליפה - GET
+	//פעולות שליפה - GETtoggleParam
 	async FindAll(collection, query = {}, project = {}) {
 		try {
 			await this.client.connect();	//CONNECTING 

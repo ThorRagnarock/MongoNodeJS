@@ -1,7 +1,6 @@
 const GroceryRoute = require('express').Router();
 const GroceryModel = require('../models/groceries');
-const toggleParam = require('../utils/utils').toggleParam;
-
+const Utils = require('../utils/utils');
 ////////////////   GET    ////////////////
 GroceryRoute.get('/', async (req, res) => {
 	try {
@@ -54,14 +53,15 @@ GroceryRoute.post('/addItem/:collectionName', async (req, res) => {
 		res.status(500).json({ error });
 	}
 });
-
 GroceryRoute.put('/:itemId', async(req,res)=>{ //
 	try {
 		const { itemId } = req.params;
 		const { collectionName } = req.body;
-		const result = await toggleParam(collectionName, itemId, 'tickToggle', pinLogic);
+		console.log("itemId", itemId);
+		const result = await Utils.ToggleParam(collectionName, itemId, 'tickToggle');
 		res.status(200).json(result);
 	} catch (error) {
+		console.log("toggleParam err: ",error);
 		res.status(500).json({ error });
 	}
 })
