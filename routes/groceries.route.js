@@ -42,7 +42,7 @@ GroceryRoute.post('/', async (req, res) => { //working just with new list?
 		res.status(500).json({ error });
 	}
 });
-GroceryRoute.post('/addItem/:collectionName', async (req, res) => {
+GroceryRoute.post('/:collectionName/addItem', async (req, res) => {
 	try {
 		let collectionName = req.params.collectionName;
 		let { userItemStr } = req.body;
@@ -53,6 +53,7 @@ GroceryRoute.post('/addItem/:collectionName', async (req, res) => {
 		res.status(500).json({ error });
 	}
 });
+////////////////   PUT    ////////////////
 GroceryRoute.put('/:itemId', async(req,res)=>{ //
 	try {
 		const { itemId } = req.params;
@@ -66,7 +67,7 @@ GroceryRoute.put('/:itemId', async(req,res)=>{ //
 	}
 })
 
-GroceryRoute.put('/feedback/:collectionName/:itemId', async (req, res) => {
+GroceryRoute.put('/:collectionName/:itemId/feedback', async (req, res) => {
 	try {
 		let collectionName = req.params.collectionName;
 		let itemId = req.params.itemId;
@@ -77,6 +78,8 @@ GroceryRoute.put('/feedback/:collectionName/:itemId', async (req, res) => {
 		res.status(500).json({ error })
 	}
 });
+////////////////   DEL    ////////////////
+
 GroceryRoute.delete('/:collectionName/:itemId', async(req, res)=>{
 	try {
 		let collectionName = req.params.collectionName;

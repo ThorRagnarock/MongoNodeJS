@@ -3,18 +3,27 @@ const nodemailer = require('nodemailer');
 const DB = require('../utils/db')
 const { ObjectId } = require('mongodb'); // Import ObjectId
 
+
+
+
 async function SendMail(table, listName, receiverEmailAddress) {
-	const emailUser = process.env.EMAIL_USER;
-	const emailPass = process.env.EMAIL_PASS;
+	const user = process.env.EMAIL_USER;
+	const password = process.env.EMAIL_PASS;
+	console.log(user, password);
+
 	let transporter = nodemailer.createTransport({
+
 		service: 'gmail',
 		auth: {
-			user: emailUser,
-			pass: emailPass,
+			user: process.env.EMAIL_USER,
+			pass: process.env.EMAIL_PASS
 		}
 	});
+	console.log("Now for the actual response: ");
+
+
 	let info = await transporter.sendMail({
-		from: `"עמוס מ- recycliST" <${emailUser}>`,
+		from: `"עמוס מ- recycliST" <${user}>`,
 		to: receiverEmailAddress,
 		subject: `שלך "${listName}" הרשימה`,
 		html: table,

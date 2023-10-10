@@ -99,22 +99,27 @@ class ShoppingList {
 		return await new DB().UpdateById(collection, userID, doc);
 	}
 	//
-	static async DuplicateList(collectionName, listNameExtention) {
-		return await new DB().DuplicateCollection(collectionName, listNameExtention);
-	}
-	/////////////////////////////////////////////
-	/////////////////////////////////////////////
-	//PinLogic used to be here, but now it's nested inside the route file itself
 
-	//this is how it called: "await toggleParam(collectionName, itemId, 'pinned', pinLogic);""
+
+
+
+
+	static async DuplicateList(collectionName, listNameExtention) {
+		console.log("Now inside the dl function: ", collectionName);
+		await new DB().DuplicateCollection(collectionName, listNameExtention);
+	}
+	////
 
 	static async MailListing(collectionName, receiverEmailAddress) {
+		console.log("email to send to: ", receiverEmailAddress);
 		const fetchedFields = { tickToggle: 1, userItemStr: 1, colorCodes: 1 }
-		const headerDoc = await new DB().FindOne(collectionName, {}, { listName: 1 });
+		const headerDoc = await new DB().FindOne(collectionName, {}, { listName: 1 }); console.log("shoppinglist -> headerDoc: ", headerDoc);
+
 		const listName = headerDoc ? headerDoc.listName : 'error, Not a header file';
 		const data = await new DB().FindAll(collectionName, {}, fetchedFields);
 		/////  build the HTML TABLE  /////
 		let renderedTable = this.BuildTable(fetchedFields, data, listName);
+		console.log("Now sending mail using the utils>sendMail...");
 		await SendMail(renderedTable, listName, receiverEmailAddress);
 	}
 	//auxaliry function to work with fetchAndMail
@@ -124,12 +129,25 @@ class ShoppingList {
 			table += `<th>${header}</th>`;
 		}
 		table += `</tr>`;
-		for (let eachRow of data) {
-			table += `<tr>`;
-			for (let field of Object.keys(fetchedFields)) {
-				table += `<td>${eachRow[field]}</td>`;
+		
+		for (let i = 1; i < data.length; i++) {
+			const row = data[i];
+			console.log("this is row", row);
+			table += '<tr>';
+			for (const key in fetchedFields) {
+				if (key === 'tickToggle') {
+					const symbol = row[key] ? '-' : 'X';
+					table += `<td>${symbol}</td>`;
+				} else if (key === 'colorCodes') {
+					let colors = row[key];  // No need to split, it's already an array
+					let coloredBlocks = colors.map(color => `<span style="color:${color};">&#9608;</span>`).join('');
+					table += `<td>${coloredBlocks}</td>`;
+				}
+				 else {
+					table += `<td>${row[key]}</td>`;
+				}
 			}
-			table += `</tr>`;
+			table += '</tr>';
 		}
 		table += `</table>`;
 		return table;
@@ -137,6 +155,19 @@ class ShoppingList {
 
 	static async SearchUserListings(userID, searchString) {
 		return await new DB().AggregateUserSearchListings(userID, searchString);
+	}
+
+	static async RenameListing(collectionName, newName) {
+
+		const filter = { isHeader: true };
+		const doc = await new DB().FindOne(collectionName, filter);
+		if (doc && doc._id) {
+			let data = { "listName": newName };
+			return await new DB().UpdateById(collectionName, doc._id, data);
+		} else {
+			// Handle the error - item not found
+			throw new Error("Header not found");
+		}
 	}
 }
 

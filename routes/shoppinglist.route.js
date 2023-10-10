@@ -9,13 +9,13 @@ const toggleParam = require('../utils/utils').ToggleParam;
 ////////////////   GET    ////////////////
 ShoppinglistRoute.get('/', async (req, res) => {
 	try {
-		let data = await ShoppinglistModel.FindAllShoppingLists();
+		let data = await ShoppinglistModel.FindAllShoppingLists();	//looks like an admin option
 		res.status(200).json(data);
 	} catch (error) {
 		res.status(500).json({ error });
 	}
 })
-ShoppinglistRoute.get('/:userID/lists', async (req, res) => {
+ShoppinglistRoute.get('/:userID/lists', async (req, res) => { //better show the aggregation
 	try { //I don't know why
 		let userID = req.params.userID;
 		let data = await ShoppinglistModel.AllUserLists(userID);
@@ -24,7 +24,7 @@ ShoppinglistRoute.get('/:userID/lists', async (req, res) => {
 		res.status(500).json({ error });
 	} //I need to get inside each collection and from there look if they have a header document, and if they do I am checking the userID inside of them  
 })//items in specific list - serves both groceries and shoppingList
-ShoppinglistRoute.get('/SearchListings/:userID', async(req,res)=>{
+ShoppinglistRoute.get('/:userID/SearchListings', async(req,res)=>{
 	try {
 		let userID = req.params.userID;
 		let { searchString } = req.body;
@@ -57,22 +57,31 @@ ShoppinglistRoute.post('/createList', async (req, res) => {
 		res.status(500).json({ error });
 	}
 })
-ShoppinglistRoute.post('/mailListing', async (req, res) => {
+ShoppinglistRoute.post('/:collectionName/mailListing/', async (req, res) => {
 	try {
-		const { collectionName, emailAddress } = req.body;
+		const { emailAddress } = req.body;
+		const collectionName = req.params.collectionName;
+
+		console.log(collectionName, emailAddress);
 		let data = await ShoppinglistModel.MailListing(collectionName, emailAddress);
+		console.log(data);
 		res.status(200).json(data);
 	} catch (error) {
+		console.log(error);
 		res.status(500).json({ error });
 	}
 })
 //  DUPLICATION OF A LISTING
-ShoppinglistRoute.post('/duplicateList', async (req, res) => {
+ShoppinglistRoute.post('/:collectionName/duplicateList', async (req, res) => {
 	try {
-		const { collectionName, listNameExtension } = req.body;
+		const listNameExtension = req.body;		
+
 		let data = await ShoppinglistModel.DuplicateList(collectionName, listNameExtension);
+		console.log("Opp -3-");
+
 		res.status(201).json(data);
 	} catch (error) {
+		console.log(error);
 		res.status(500).json({ error });
 	}
 })
@@ -80,33 +89,28 @@ ShoppinglistRoute.post('/duplicateList', async (req, res) => {
 //toggle boolean parameters
 
 
-ShoppinglistRoute.put('/toggleParam/:itemId', async (req, res) => {
+ShoppinglistRoute.put('/:collectionName/toggleParam', async (req, res) => {
 	try {
-		const { itemId } = req.params;
-		const { paramName, collectionName } = req.body;
+		const { paramName } = req.body;
+		const { docId } = req.body;
 
 		const pinLogic = async (paramName, turnedValue) => {
 			console.log("Parameter: ", paramName);
-			if (paramName == 'pinned') {
-				console.log("pinned test PASSED.");
-				
-				let pinnedQuery = { "pinned": true };
-				console.log("count query:", pinnedQuery);
-				
+			if (paramName == 'pinned') {			
+				let pinnedQuery = { "pinned": true };				
 				let pinnedCount = await new DB().CountDocs(collectionName, pinnedQuery);
 				console.log("Pinned count is: ", pinnedCount);  // Debugging line
-				
 				if (pinnedCount >= 3 && turnedValue) {
 					return { status: 'failed', message: 'ניתן לנעוץ עד 3 רשימות בלבד' };
 				}
 			}
 			let data = { [paramName]: turnedValue };
-			return await new DB().UpdateById(collectionName, itemId, data);
+			return await new DB().UpdateById(collectionName, docId, data);
 		};
 		
 		const result = await toggleParam(
 			collectionName, 
-			itemId, 
+			docId, 
 			paramName, 
 			pinLogic
 			);
@@ -117,21 +121,31 @@ ShoppinglistRoute.put('/toggleParam/:itemId', async (req, res) => {
 	}
 });
 
+ShoppinglistRoute.put('/:collectionName/renameListing', async (req, res) => {
+	try {
+		let  collectionName  = req.params.collectionName;
+		let { newName } = req.body;
+		let result = await ShoppinglistModel.RenameListing(collectionName, newName);
+		res.status(200).json(result);
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({ error });
+	}
 
-
-
-
+})
 
 //UPDATE info in regular fields
-ShoppinglistRoute.put('/:id', async (req, res) => {
+ShoppinglistRoute.put('/:collectionName/:docId', async (req, res) => {
 	try {	//the thing will be set to update once before the thing is closed..
-		let { id } = req.params.id;
+		let { docId } = req.params.docId;
+		let { collectionName } = req.params.collectionName;
+
 		let { listName, listType, listColor } = req.body;
 		let updatedObject = {};
 		if (listName) updatedObject.listName = listName
 		if (listType) updatedObject.listType = listType
 		if (listColor) updatedObject.listColor = listColor;
-		let data = await ShoppinglistModel.UpdateListingDetails(id, updatedObject);
+		let data = await ShoppinglistModel.UpdateListingDetails(collectionName,docId, updatedObject);
 		res.status(200).json(data);
 	} catch (error) {
 		res.status(500).json({ error });
@@ -149,30 +163,3 @@ ShoppinglistRoute.delete('/', async (req, res) => { //CRUD DELETER
 	}
 })
 module.exports = ShoppinglistRoute;
-
-
-
-		// console.log("Hello, toggling bools in param:", paramName);
-		// const pinLogic = async (paramName, turnedValue)=> {
-		// 	console.log("Parameter: ",paramName);
-		// 	if (paramName == 'pinned') {
-		// 		console.log("pinned test PASSED.");
-
-		// 		let pinnedQuery = { "pinned": true};
-		// 		console.log("count query:", pinnedQuery);
-
-		// 		let pinnedCount = await new DB().CountDocs(collectionName, pinnedQuery);
-
-		// 		if (pinnedCount >= 3 && turnedValue) {
-		// 			return { status: 'failed', message: 'ניתן לנעוץ עד 3 רשימות בלבד' };
-		// 		}
-		// 		console.log(3);
-
-		// 	}
-		// 	console.log("hello again!!!");
-		// 	let data =  { [paramName]: turnedValue } ;
-		// 	console.log(data);
-		// 	return await new DB().UpdateById(collectionName, itemId, data);
-
-		// 	return null;
-		// };

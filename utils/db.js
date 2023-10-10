@@ -220,21 +220,33 @@ class DB {
 		}
 	}
 	async DuplicateCollection(originCollectionName, newExt) {
-		let userId;
-		const originCollection = this.client.db(this.db_name).collection(originCollectionName);
+		let userID;
+		console.log("\n\nNow inside the DB()");
+		console.log("originCollectionName: ",originCollectionName);
+
 		const docs = await this.FindAll(originCollectionName);
+		// console.log("DB -1-");
 		const newColName = new ObjectId().toString(); //(new id)
+		// console.log("DB -2-");
 
-		const headerDoc = await this.FindOne(originCollection, { isHeader: true });
+		const headerDoc = await this.FindOne(originCollectionName, { isHeader: true });
+		// console.log("DB -3-", newExt.listNameExtension);
+		// console.log("headerDoc is: ",headerDoc);
+
 		if (headerDoc) {
-			userId = headerDoc.userId;
-			headerDoc.listName = `${headerDoc.listName}(${newExt})`;
-		}
+			userID = headerDoc.userID;
+			headerDoc.listName = `${headerDoc.listName}${newExt.listNameExtension}`;
+			docs[0] = headerDoc;
 
-		const duplicatedCollectionName = `${newColName}_${userId}`;
+		}
+		console.log("NEW headerDoc is: ",headerDoc);
+
+		const duplicatedCollectionName = `${newColName}_${newExt.listNameExtension}`;
 		const duplicateCollection = this.client.db(this.db_name).collection(duplicatedCollectionName);
 
+		await this.client.connect();	//CONNECTING 
 		await duplicateCollection.insertMany(docs);
+		await this.client.close();
 
 		console.log(`Duplicated ${originCollectionName} to ${duplicatedCollectionName} with new listName`);
 		return duplicateCollection;
