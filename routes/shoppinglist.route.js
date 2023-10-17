@@ -7,14 +7,14 @@ const toggleParam = require('../utils/utils').ToggleParam;
 
 
 ////////////////   GET    ////////////////
-ShoppinglistRoute.get('/', async (req, res) => {
-	try {
-		let data = await ShoppinglistModel.FindAllShoppingLists();	//looks like an admin option
-		res.status(200).json(data);
-	} catch (error) {
-		res.status(500).json({ error });
-	}
-})
+// ShoppinglistRoute.get('/', async (req, res) => {
+// 	try {
+// 		let data = await ShoppinglistModel.FindAllShoppingLists();	//looks like an admin option
+// 		res.status(200).json(data);
+// 	} catch (error) {
+// 		res.status(500).json({ error });
+// 	}
+// })
 ShoppinglistRoute.get('/:userID/lists', async (req, res) => { //better show the aggregation
 	try { //I don't know why
 		let userID = req.params.userID;
