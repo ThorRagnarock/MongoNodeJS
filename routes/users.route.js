@@ -7,20 +7,19 @@ const UploadImage = require('../utils/upload.js');
 
 UsersRoute.post('/register', UploadImage, async (req, res) => {
 	try {
-
-		const now = new Date();
-		const accountCreated = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
-		//
+		// const now = new Date();
+		// const accountCreated = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
+		// //
 		let { name, email, password, recycPrefs, residence, status, DateOfBirth, profileImage } = req.body;
 		//
 		status = status || 'מעדיף/ה לא לענות';
-	
+
 		if (req?.imageData?.secure_url) {
 			profileImage = req.imageData.secure_url;
 		}
 		else { profileImag = "https://cdn.iconscout.com/icon/free/png-512/free-profile-3484746-2917913.png"; }
 		//
-		let data = await UserModel.Register(name, email, password, "", recycPrefs, residence, status, DateOfBirth, profileImage, 0, accountCreated);
+		let data = await UserModel.Register(name, email, password, "", recycPrefs, residence, status, DateOfBirth, profileImage);
 		//
 		res.status(201).json({ msg: "Registration Completed" });
 

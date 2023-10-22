@@ -2,36 +2,40 @@ const DB = require('../utils/db')
 const bcrypt = require('bcrypt');
 
 class User {
-	_id; 
-	name; 
-	email; 
-	password; 
-	passwordResetToken;
-	recycPrefs; 
+	// _id; 
+	name;
+	email;
+	password;
+	// passwordResetToken;
+	recycPrefs;
 	residence;
-	status; 
-	DateOfBirth; 
-	profileImage; 
-	points; 
-	accountCreated;
+	status;
+	DateOfBirth;
+	profileImage;
+	// points; 
+	// accountCreated;
 	// shoppingLists; 
 	// achievements; 
 	// badges;
 
-	constructor(name, email, password, passwordResetToken, recycPrefs, residence, status, DateOfBirth, profileImage, points, accountCreated) {
+	// const accountCreated = ;
+	//
+
+	constructor(name, email, password, recycPrefs, residence, status, DateOfBirth, profileImage) {
+		const now = new Date();
 		// this._id = _id;
-		this.profileImage = profileImage;
+		this.name = name;
 		this.email = email;
 		this.password = password;
-		this.passwordResetToken = passwordResetToken;
-		this.name = name;
 		this.recycPrefs = recycPrefs;
 		this.residence = residence;			//object contains city, street and streetnum
-
 		this.status = status;
 		this.DateOfBirth = DateOfBirth;
-		this.points = points;
-		this.accountCreated = accountCreated;
+		this.profileImage = profileImage;
+		///////////////////////////////////////////////////////////
+		this.passwordResetToken = null;
+		this.points = 0;
+		this.accountCreated = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
 
 		this.shoppingLists = [];	//array of lists, embeded
 		this.achievements = [];	//array of achievements
@@ -39,11 +43,11 @@ class User {
 	}
 	////////////////////////////////////////////////
 	/////////////////// REGISTER ///////////////////
-	static async Register(name, email, password, passwordResetToken, recycPrefs, residence, status, DateOfBirth, profileImage, points, accountCreated) {
+	static async Register(name, email, password, recycPrefs, residence, status, DateOfBirth, profileImage) {
 		let hashedPassword = await bcrypt.hash(password, 10);
-		let user = new User(name, email, hashedPassword, passwordResetToken, recycPrefs, residence, status, DateOfBirth, profileImage, points, accountCreated);
+		// let user = new User(name, email, hashedPassword, passwordResetToken, recycPrefs, residence, status, DateOfBirth, profileImage, points, accountCreated);
 
-		// console.log(password, hashedPassword);
+		let user = new User(name, email, hashedPassword, recycPrefs, residence, status, DateOfBirth, profileImage);
 		console.log(user);
 		return await new DB().Insert('users', user);
 	}
@@ -89,7 +93,7 @@ class User {
 		let query = { "email": { $regex: new RegExp(`^${email}$`, 'i') } }
 		return await new DB().FindAll('users', query);
 	}
-	
+
 	static async UpdateUserDetails(id, doc) {
 		return await new DB().UpdateById('users', id, doc)
 	}

@@ -42,8 +42,6 @@ export default function Register() {
 		let data = await res.json();
 		console.log(data);
 	}
-	
-
 	return (
 		<div>
 			<h1>Register</h1>
