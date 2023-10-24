@@ -9,7 +9,7 @@ export default function Login() {
 
 		let user = { email, password };
 		//NOT SURE IF THIS IS GOING TO WORK AT ALLLLLL
-		let res = await fetch('http://localhost:5500/api/users/login', { //https://recyclistserver.onrender.com/
+		let res = await fetch('https://recyclistserver.onrender.com/api/users/login', { //
 			method: 'POST',
 			headers: {
 				Accept: "application/json",

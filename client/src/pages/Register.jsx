@@ -26,12 +26,16 @@ export default function Register() {
 		});
 	}
 
+
+
+
+
 	async function Submit(event) {
 		event.preventDefault();
 
 		let user = { email, password, name, recycPrefs, residence, status, profileImage }
 		console.log(user);
-		let res = await fetch('http://localhost:5500/api/users/register', {
+		let res = await fetch('https://recyclistserver.onrender.com/api/users/register', {
 			method: 'POST',
 			headers: {
 				Accept: "application/json",
@@ -42,6 +46,11 @@ export default function Register() {
 		let data = await res.json();
 		console.log(data);
 	}
+
+
+
+
+	
 	return (
 		<div>
 			<h1>Register</h1>

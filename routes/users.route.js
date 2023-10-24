@@ -44,6 +44,17 @@ UsersRoute.post('/login', async (req, res) => {
 		res.status(500).json({ error })
 	}
 })
+
+UsersRoute.post('/checkMail', async (req, res) => {
+	try {
+		let { email } = req.body;
+		let data = await UserModel.FindByEmail(email);
+		res.status(200).json(data);
+
+	} catch (error) {
+		res.status(500).json({ error });
+	}
+})
 /////////////////////////////////////////
 UsersRoute.get('/', async (req, res) => {
 	try {
@@ -53,16 +64,8 @@ UsersRoute.get('/', async (req, res) => {
 		res.status(500).json({ error });
 	}
 })
-UsersRoute.get('/:email', async (req, res) => {
-	try {
-		let { email } = req.params;
-		let data = await UserModel.FindByEmail(email);
-		res.status(200).json(data);
+/////////////////////////////////////////
 
-	} catch (error) {
-		res.status(500).json({ error });
-	}
-})
 UsersRoute.put('/:id', async (req, res) => {
 	try {
 		let { id } = req.params;

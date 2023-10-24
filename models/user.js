@@ -92,7 +92,7 @@ class User {
 	static async FindByEmail(email) {
 		let query = { "email": { $regex: new RegExp(`^${email}$`, 'i') } }
 		return await new DB().FindAll('users', query);
-	}
+	}// to be used by IsExistingUser.js
 
 	static async UpdateUserDetails(id, doc) {
 		return await new DB().UpdateById('users', id, doc)
