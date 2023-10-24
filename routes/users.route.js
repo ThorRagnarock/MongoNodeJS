@@ -49,8 +49,10 @@ UsersRoute.post('/checkMail', async (req, res) => {
 	try {
 		let { email } = req.body;
 		let data = await UserModel.FindByEmail(email);
-		if (!data) { res.status(401).json({ msg: "something is wrong there" }); }
-		else res.status(200).json(data);
+
+
+		if (data && data.length > 0) { res.status(200).json({ exists: true }) }
+		else { res.status(200).json({ exists: false }) }
 
 	} catch (error) {
 		res.status(500).json({ error });
