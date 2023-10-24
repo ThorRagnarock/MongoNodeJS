@@ -13,7 +13,6 @@ UsersRoute.post('/register', UploadImage, async (req, res) => {
 		let { name, email, password, recycPrefs, residence, status, DateOfBirth, profileImage } = req.body;
 		//
 		status = status || 'מעדיף/ה לא לענות';
-
 		if (req?.imageData?.secure_url) {
 			profileImage = req.imageData.secure_url;
 		}
@@ -22,7 +21,6 @@ UsersRoute.post('/register', UploadImage, async (req, res) => {
 		let data = await UserModel.Register(name, email, password, "", recycPrefs, residence, status, DateOfBirth, profileImage);
 		//
 		res.status(201).json({ msg: "Registration Completed" });
-
 	} catch (error) {
 		res.status(500).json({ error });
 	}
@@ -32,7 +30,9 @@ UsersRoute.post('/register', UploadImage, async (req, res) => {
 UsersRoute.post('/login', async (req, res) => {
 	try {
 		//TODO: Login actions
-		let { email, password } = req.body;
+		let { email } = req.body;
+		let { password } = req.body;
+
 		let user = await UserModel.Login(email, password);
 		if (!user)
 			res.status(401).json({ msg: "incorrect login details" });
@@ -49,7 +49,8 @@ UsersRoute.post('/checkMail', async (req, res) => {
 	try {
 		let { email } = req.body;
 		let data = await UserModel.FindByEmail(email);
-		res.status(200).json(data);
+		if (!data) { res.status(401).json({ msg: "something is wrong there" }); }
+		else res.status(200).json(data);
 
 	} catch (error) {
 		res.status(500).json({ error });
