@@ -7,18 +7,12 @@ const UploadImage = require('../utils/upload.js');
 
 UsersRoute.post('/register', UploadImage, async (req, res) => {
 	try {
-		// const now = new Date();
-		// const accountCreated = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
-		// //
-		let { name, email, password, recycPrefs, residence, status, DateOfBirth, profileImage } = req.body;
-		//
+		let { name, email, password, recycPrefs, residence, status, birthDate, profileImage } = req.body;
 		status = status || 'מעדיף/ה לא לענות';
-		if (req?.imageData?.secure_url) {
-			profileImage = req.imageData.secure_url;
-		}
-		else { profileImag = "https://cdn.iconscout.com/icon/free/png-512/free-profile-3484746-2917913.png"; }
+
+		profileImage = req?.imageData?.secure_url || "https://cdn.iconscout.com/icon/free/png-512/free-profile-3484746-2917913.png";
 		//
-		let data = await UserModel.Register(name, email, password, "", recycPrefs, residence, status, DateOfBirth, profileImage);
+		let data = await UserModel.Register(name, email, password, "", recycPrefs, residence, status, birthDate, profileImage);
 		//
 		res.status(201).json({ msg: "Registration Completed" });
 	} catch (error) {
@@ -58,6 +52,16 @@ UsersRoute.post('/checkMail', async (req, res) => {
 
 	} catch (error) {
 		res.status(500).json({ error });
+	}
+})
+UsersRoute.post('/returnId', async (req, res)=>{
+	try {
+		let {email}= req.body;
+		let data = await UserModel.EmailToId(email);
+		res.status(200).json({data});
+
+	} catch (error) {
+		res.status(500).json({error});
 	}
 })
 /////////////////////////////////////////
@@ -102,3 +106,12 @@ UsersRoute.put('/:id/upload', UploadImage, async (req, res) => {
 })
 
 module.exports = UsersRoute; 
+
+
+
+// const now = new Date(); // const accountCreated = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
+		// //		// maybe it should be each one in different line?
+// if (req?.imageData?.secure_url) {
+		// 	profileImage = req.imageData.secure_url;
+		// }
+		// else { profileImag = "https://cdn.iconscout.com/icon/free/png-512/free-profile-3484746-2917913.png"; }

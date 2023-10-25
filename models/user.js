@@ -10,7 +10,7 @@ class User {
 	recycPrefs;
 	residence;
 	status;
-	DateOfBirth;
+	birthDate;
 	profileImage;
 	// points; 
 	// accountCreated;
@@ -21,7 +21,7 @@ class User {
 	// const accountCreated = ;
 	//
 
-	constructor(name, email, password, recycPrefs, residence, status, DateOfBirth, profileImage) {
+	constructor(name, email, password, recycPrefs, residence, status, birthDate, profileImage) {
 		const now = new Date();
 		// this._id = _id;
 		this.name = name;
@@ -30,7 +30,7 @@ class User {
 		this.recycPrefs = recycPrefs;
 		this.residence = residence;			//object contains city, street and streetnum
 		this.status = status;
-		this.DateOfBirth = DateOfBirth;
+		this.birthDate = birthDate;
 		this.profileImage = profileImage;
 		///////////////////////////////////////////////////////////
 		this.passwordResetToken = null;
@@ -43,11 +43,11 @@ class User {
 	}
 	////////////////////////////////////////////////
 	/////////////////// REGISTER ///////////////////
-	static async Register(name, email, password, recycPrefs, residence, status, DateOfBirth, profileImage) {
+	static async Register(name, email, password, recycPrefs, residence, status, birthDate, profileImage) {
 		let hashedPassword = await bcrypt.hash(password, 10);
-		// let user = new User(name, email, hashedPassword, passwordResetToken, recycPrefs, residence, status, DateOfBirth, profileImage, points, accountCreated);
+		// let user = new User(name, email, hashedPassword, passwordResetToken, recycPrefs, residence, status, birthDate, profileImage, points, accountCreated);
 
-		let user = new User(name, email, hashedPassword, recycPrefs, residence, status, DateOfBirth, profileImage);
+		let user = new User(name, email, hashedPassword, recycPrefs, residence, status, birthDate, profileImage);
 		console.log(user);
 		return await new DB().Insert('users', user);
 	}
@@ -71,7 +71,7 @@ class User {
 				recycPrefs: user.recycPrefs,
 				residence: user.residence,
 				status: user.status,
-				DateOfBirth: user.DateOfBirth,
+				birthDate: user.birthDate,
 				profileImage: user.profileImage,
 				points: user.points,
 				accountCreated: user.accountCreated,
@@ -96,6 +96,14 @@ class User {
 
 	static async UpdateUserDetails(id, doc) {
 		return await new DB().UpdateById('users', id, doc)
+	}
+
+	static async EmailToId(email) {
+		let query = { email: email };
+		let currentUser = await DB().FindOne('users', query );
+
+		if (currentUser ===null) { throw new Error ("User not found"); }
+		return currentUser._id["$oid"];
 	}
 }
 module.exports = User;
