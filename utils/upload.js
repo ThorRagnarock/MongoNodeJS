@@ -11,7 +11,13 @@ cloudinary.config({
 
 function UploadImage(req, res, next) {
 	try {
+		req.imageData = result;
+		console.log('Image Data in Middleware:', req.imageData);
+
+
+
 		let { profileImage } = req.body;
+		if(!profileImage || profileImage == undefined) next();
 		let {id} = req.params;
 		cloudinary.uploader.upload(profileImage, {
 			public_id: `App_Uploads/${id}`

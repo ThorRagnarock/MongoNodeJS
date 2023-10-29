@@ -25,14 +25,13 @@ export default function Register() {
 			reader.onerror = (error) => reject(error);
 		});
 	}
-
-
-
-
-
+	
 	async function Submit(event) {
 		event.preventDefault();
 
+		
+		
+		
 		let user = { email, password, name, recycPrefs, residence, status, profileImage }
 		console.log(user);
 		let res = await fetch('https://recyclistserver.onrender.com/api/users/register', {

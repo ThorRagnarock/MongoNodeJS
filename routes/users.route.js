@@ -10,6 +10,8 @@ UsersRoute.post('/register', UploadImage, async (req, res) => {
 		let { name, email, password, recycPrefs, residence, status, birthDate, profileImage } = req.body;
 		status = status || 'מעדיף/ה לא לענות';
 
+		console.log('Image Data in Route:', req.imageData);
+
 		profileImage = req?.imageData?.secure_url || "https://cdn.iconscout.com/icon/free/png-512/free-profile-3484746-2917913.png";
 		//
 		let data = await UserModel.Register(name, email, password, "", recycPrefs, residence, status, birthDate, profileImage);
@@ -64,6 +66,8 @@ UsersRoute.post('/returnId', async (req, res)=>{
 		res.status(500).json({error});
 	}
 })
+
+
 /////////////////////////////////////////
 UsersRoute.get('/', async (req, res) => {
 	try {

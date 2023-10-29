@@ -6,20 +6,12 @@ class User {
 	name;
 	email;
 	password;
-	// passwordResetToken;
 	recycPrefs;
 	residence;
 	status;
 	birthDate;
 	profileImage;
-	// points; 
-	// accountCreated;
-	// shoppingLists; 
-	// achievements; 
-	// badges;
-
-	// const accountCreated = ;
-	//
+	
 
 	constructor(name, email, password, recycPrefs, residence, status, birthDate, profileImage) {
 		const now = new Date();
@@ -37,8 +29,8 @@ class User {
 		this.points = 0;
 		this.accountCreated = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
 
-		this.shoppingLists = [];	//array of lists, embeded
-		this.achievements = [];	//array of achievements
+		this.shoppingLists = [];		//array of lists, embeded
+		this.achievements = [];			//array of achievements
 		this.badges = [];				//array of badges
 	}
 	////////////////////////////////////////////////
