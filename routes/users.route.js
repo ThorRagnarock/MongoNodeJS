@@ -7,6 +7,7 @@ const UploadImage = require('../utils/upload.js');
 
 UsersRoute.post('/register', UploadImage, async (req, res) => {
 	try {
+		console.log("Inside the register router");
 		let { name, email, password, recycPrefs, residence, status, birthDate, profileImage } = req.body;
 		status = status || 'מעדיף/ה לא לענות';
 
@@ -99,6 +100,7 @@ UsersRoute.put('/:id', async (req, res) => {
 })
 UsersRoute.put('/:id/upload', UploadImage, async (req, res) => {
 	try {
+		console.log("inside the upload image thing");
 		// update the document
 		let updatedObject = { profileImage: req.imageData.secure_url };		
 		//return response
