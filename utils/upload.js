@@ -10,6 +10,7 @@ cloudinary.config({
 //o2ja2wqt
 
 function UploadImage(req, res, next) {
+	console.log("Inside the UploadImage");
 	try {
 		req.imageData = result;
 		console.log('Image Data in Middleware:', req.imageData);
