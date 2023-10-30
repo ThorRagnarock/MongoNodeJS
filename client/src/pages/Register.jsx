@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
 
 export default function Register() {
+	const [name, SetName] = useState('');
+
 	const [email, SetEmail] = useState('');
 	const [password, SetPassword] = useState('');
-	const [name, SetName] = useState('');
 	const [recycPrefs, SetRecyclePrefs] = useState(0);
 	const [residence, SetResidence] = useState({ city: '', cityCode: 0, street: '', streetNum: '' });
+	const [birthDate, SetBirthDate] = useState(new Date(null));
+
 	const [status, SetStatus] = useState('');
 	const [profileImage, SetProfileImage] = useState('');
 
@@ -32,7 +35,7 @@ export default function Register() {
 		
 		
 		
-		let user = { email, password, name, recycPrefs, residence, status, profileImage }
+		let user = { name, email, password, recycPrefs, birthDate, residence, status, profileImage }
 		console.log(user);
 		let res = await fetch('https://recyclistserver.onrender.com/api/users/register', {
 			method: 'POST',
@@ -46,10 +49,6 @@ export default function Register() {
 		console.log(data);
 	}
 
-
-
-
-	
 	return (
 		<div>
 			<h1>Register</h1>
@@ -64,6 +63,8 @@ export default function Register() {
 					<li><input type='number' placeholder='recycPrefs 1-5' required
 						onChange={(event) => SetRecyclePrefs(event.target.value)} /></li>
 					{/* residence-city, street, street number */}
+					<li><input type='date' placeholder='Birth Date'  
+						onChange={(event)=> SetBirthDate(event.target.value)}/></li>
 					<li><input type='text' placeholder='city'
 						onChange={(event) => SetResidence({ ...residence, city: event.target.value })} /></li>
 					<li><input type='text' placeholder='street'
