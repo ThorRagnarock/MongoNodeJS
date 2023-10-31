@@ -15,10 +15,11 @@ UsersRoute.post('/register', UploadImage, async (req, res) => {
 
 		profileImage = req?.imageData?.secure_url || "https://cdn.iconscout.com/icon/free/png-512/free-profile-3484746-2917913.png";
 		//
-		let data = await UserModel.Register(name, email, password, "", recycPrefs, residence, status, birthDate, profileImage);
-		//
+		let data = await UserModel.Register(name, email, password ,recycPrefs, residence, status, birthDate, profileImage); 
+		//I just chaged that thing --- there was "" between recycPrefs, residence,
 		res.status(201).json({ msg: "Registration Completed" });
 	} catch (error) {
+		console.log(error);
 		res.status(500).json({ error });
 	}
 });
