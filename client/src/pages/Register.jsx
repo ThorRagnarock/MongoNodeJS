@@ -65,9 +65,9 @@ export default function Register() {
 					<li><input type='number' placeholder='recycPrefs 1-5' required
 						onChange={(event) => SetRecyclePrefs(event.target.value)} /></li>
 
-					{/* residence-city, street, street number */}
-					<li><input type="date"  placeholder='Birth Date'  
-						onChange={(event)=> SetBirthDate(event.target.value)}/></li>
+					{/* residence-city, street, street number placeholder='Birth Date'   */}
+					<li><input type="date"  
+						onChange={(event)=> SetBirthDate(event.target.value)}/>Birth Date</li>
 
 					<li><input type='text' placeholder='city'
 						onChange={(event) => SetResidence({ ...residence, city: event.target.value })} /></li>
