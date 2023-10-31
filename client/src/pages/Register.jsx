@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 
 export default function Register() {
 	const [name, SetName] = useState('');
-
 	const [email, SetEmail] = useState('');
 	const [password, SetPassword] = useState('');
 	const [recycPrefs, SetRecyclePrefs] = useState(0);
@@ -56,19 +55,26 @@ export default function Register() {
 				<ul>
 					<li><input type='email' placeholder='email' required autoComplete="off"
 						onChange={(event) => SetEmail(event.target.value)} /></li>
+
 					<li><input type='password' placeholder='password' required autoComplete="off"
 						onChange={(event) => SetPassword(event.target.value)} /></li>
+
 					<li><input type='text' placeholder='name' required
 						onChange={(event) => SetName(event.target.value)} /></li>
+
 					<li><input type='number' placeholder='recycPrefs 1-5' required
 						onChange={(event) => SetRecyclePrefs(event.target.value)} /></li>
+
 					{/* residence-city, street, street number */}
-					<li><input type='date' placeholder='Birth Date'  
+					<li><input type="date"  placeholder='Birth Date'  
 						onChange={(event)=> SetBirthDate(event.target.value)}/></li>
+
 					<li><input type='text' placeholder='city'
 						onChange={(event) => SetResidence({ ...residence, city: event.target.value })} /></li>
+
 					<li><input type='text' placeholder='street'
 						onChange={(event) => SetResidence({ ...residence, street: event.target.value })} /></li>
+
 					<li><input type='number' placeholder='street number'
 						onChange={(event) => SetResidence({ ...residence, streetNum: event.target.value })} /></li>
 					{/* residence-city, street, street number */}
