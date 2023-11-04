@@ -11,9 +11,8 @@ export default function Register() {
 	const [status, SetStatus] = useState('');
 	const [profileImage, SetProfileImage] = useState('');
 
-
 	const HandleImageUpload = async (event) => {
-		// event.preventDefault();
+		event.preventDefault();
 		const file = event.target.files[0];
 		const base64Image = await toBase64(file);
 		SetProfileImage(base64Image);
@@ -31,9 +30,6 @@ export default function Register() {
 	async function Submit(event) {
 		event.preventDefault();
 
-		
-		
-		
 		let user = { name, email, password, recycPrefs, birthDate, residence, status, profileImage }
 		console.log(user);
 		let res = await fetch('https://recyclistserver.onrender.com/api/users/register', {

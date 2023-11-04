@@ -12,7 +12,7 @@ class User {
 	birthDate;
 	profileImage;
 	
-
+//subscribeDate
 	constructor(name, email, password, recycPrefs, residence, status, birthDate, profileImage) {
 		const now = new Date();
 		// this._id = _id;
@@ -20,14 +20,14 @@ class User {
 		this.email = email;
 		this.password = password;
 		this.recycPrefs = recycPrefs;
-		this.residence = residence;			//object contains city, street and streetnum
+		this.residence = residence;		//object contains city, street and streetnum
 		this.status = status;
 		this.birthDate = birthDate;
 		this.profileImage = profileImage;
 		///////////////////////////////////////////////////////////
 		this.passwordResetToken = null;
 		this.points = 0;
-		this.accountCreated = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
+		this.subscribeDate = now;		//`${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
 
 		this.shoppingLists = [];		//array of lists, embeded
 		this.achievements = [];			//array of achievements
@@ -37,7 +37,7 @@ class User {
 	/////////////////// REGISTER ///////////////////
 	static async Register(name, email, password, recycPrefs, residence, status, birthDate, profileImage) {
 		let hashedPassword = await bcrypt.hash(password, 10);
-		// let user = new User(name, email, hashedPassword, passwordResetToken, recycPrefs, residence, status, birthDate, profileImage, points, accountCreated);
+		// let user = new User(name, email, hashedPassword, passwordResetToken, recycPrefs, residence, status, birthDate, profileImage, points, subscribeDate);
 
 		let user = new User(name, email, hashedPassword, recycPrefs, residence, status, birthDate, profileImage);
 		console.log(user);
@@ -66,7 +66,7 @@ class User {
 				birthDate: user.birthDate,
 				profileImage: user.profileImage,
 				points: user.points,
-				accountCreated: user.accountCreated,
+				subscribeDate: user.subscribeDate,
 				shoppingLists: user.shoppingLists,
 				achievements: user.achievements,
 				badges: user.badges,
