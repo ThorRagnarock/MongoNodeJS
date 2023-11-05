@@ -1,3 +1,4 @@
+const uid = require('uuid').v4;
 const cloudinary = require('cloudinary').v2;
 
 cloudinary.config({
@@ -17,7 +18,7 @@ function UploadImage(req, res, next) {
 			profileImage = `data:image/png;base64,${profileImage}`;
 		}
 		cloudinary.uploader.upload(profileImage, {
-			public_id: `App_Uploads/${id}`
+			public_id: `App_Uploads/${uid()}`
 		},
 			(err, result) => {
 				if (err)

@@ -2,6 +2,8 @@
 const UsersRoute = require('express').Router();
 const UserModel = require('../models/user');
 const UploadImage = require('../utils/upload.js');
+const bcrypt = require('bcrypt');
+
 
 
 
@@ -29,9 +31,9 @@ UsersRoute.post('/register', UploadImage, async (req, res) => {
 UsersRoute.post('/login', async (req, res) => {
 	try {
 		//TODO: Login actions
-		let { email } = req.body;
-		let { password } = req.body;
-
+		let { email, password } = req.body;
+		// let { password } = req.body;
+		console.log(email, password);
 		let user = await UserModel.Login(email, password);
 		if (!user)
 			res.status(401).json({ msg: "incorrect login details" });
