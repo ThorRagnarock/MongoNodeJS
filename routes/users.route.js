@@ -35,8 +35,9 @@ UsersRoute.post('/login', async (req, res) => {
 		// let { password } = req.body;
 		console.log(email, password);
 		let user = await UserModel.Login(email, password);
-		if (!user)
+		if (!user) {
 			res.status(401).json({ msg: "incorrect login details" });
+		}
 		else {
 			console.log("Login Succesful!");
 			res.status(200).json(user);
