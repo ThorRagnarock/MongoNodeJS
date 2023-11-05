@@ -13,6 +13,9 @@ function UploadImage(req, res, next) {
 	try {
 		let { profileImage } = req.body;
 		let {id} = req.params;
+		if (!profileImage.startsWith("data:")){
+			profileImage = `data:image/png;base64,${profileImage}`;
+		}
 		cloudinary.uploader.upload(profileImage, {
 			public_id: `App_Uploads/${id}`
 		},
