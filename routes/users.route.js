@@ -59,6 +59,8 @@ UsersRoute.post('/checkMail', async (req, res) => {
 		res.status(500).json({ error });
 	}
 })
+
+
 UsersRoute.post('/returnId', async (req, res) => {
 	try {
 		let { email } = req.body;
@@ -67,10 +69,8 @@ UsersRoute.post('/returnId', async (req, res) => {
 		res.status(200).json({ data });
 
 	} catch (error) {
-		let { email } = req.body;
-
-		console.log("returnId route, email: ", email);
-		res.status(500).json({ error });
+		console.warn("Error in /returnId route:", error);
+		res.status(500).json({ error: error.message });
 	}
 })
 
