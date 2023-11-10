@@ -52,11 +52,8 @@ UsersRoute.post('/checkMail', async (req, res) => {
 		let { email } = req.body;
 		let data = await UserModel.FindByEmail(email);
 
-
-		if (data && data.length > 0) 
-		{ res.status(200).json({ exists: true }) }
-		else 
-		{ res.status(200).json({ exists: false }) }
+		if (data && data.length > 0) { res.status(200).json({ exists: true }) }
+		else { res.status(200).json({ exists: false }) }
 
 	} catch (error) {
 		res.status(500).json({ error });
@@ -65,6 +62,7 @@ UsersRoute.post('/checkMail', async (req, res) => {
 UsersRoute.post('/returnId', async (req, res)=>{
 	try {
 		let {email}= req.body;
+		console.log("returnId route, email: ", email);
 		let data = await UserModel.EmailToId(email);
 		res.status(200).json({data});
 

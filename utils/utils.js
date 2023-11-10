@@ -31,9 +31,6 @@ async function SendMail(table, listName, receiverEmailAddress) {
 	console.log("email sent " + info.response);
 }
 
-
-
-
 async function ToggleParam(collection, itemId, paramName, pinLogic = null) {
 	const filter = { _id: new ObjectId(itemId) };
 	const doc = await new DB().FindOne(collection, filter);

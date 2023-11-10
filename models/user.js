@@ -48,7 +48,7 @@ class User {
 
 	static async Login(email, password) {
 		try {
-			let query = { email: email }
+			let query = { "email": email }
 			let user = await new DB().FindOne('users', query);
 			console.log({ user });
 			if (!user || !(await bcrypt.compare(password, user.password)))
@@ -91,10 +91,10 @@ class User {
 	}
 
 	static async EmailToId(email) {
-		let query = { email: email };
-		let currentUser = await DB().FindOne('users', query );
+		let query = { "email": email };
+		let currentUser = await DB().FindOne('users', query);
 
-		if (currentUser ===null) { throw new Error ("User not found"); }
+		if (currentUser === null) { throw new Error("User not found"); }
 		return currentUser._id["$oid"];
 	}
 }
