@@ -92,9 +92,10 @@ class User {
 
 	static async EmailToId(email) {
 		let query = { "email": email };
-		let currentUser = await new  DB().FindOne('users', query);
+		let currentUser = await new DB().FindOne('users', query);
+ 
 
-		if (currentUser === null) { throw new Error("User not found"); }
+		if (!currentUser) { throw new Error("User not found"); }
 		return currentUser._id["$oid"];
 	}
 }
