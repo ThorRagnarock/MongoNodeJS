@@ -59,15 +59,18 @@ UsersRoute.post('/checkMail', async (req, res) => {
 		res.status(500).json({ error });
 	}
 })
-UsersRoute.post('/returnId', async (req, res)=>{
+UsersRoute.post('/returnId', async (req, res) => {
 	try {
-		let {email}= req.body;
+		let { email } = req.body;
 		console.log("returnId route, email: ", email);
 		let data = await UserModel.EmailToId(email);
-		res.status(200).json({data});
+		res.status(200).json({ data });
 
 	} catch (error) {
-		res.status(500).json({error});
+		let { email } = req.body;
+
+		console.log("returnId route, email: ", email);
+		res.status(500).json({ error });
 	}
 })
 
