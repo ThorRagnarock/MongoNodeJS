@@ -45,6 +45,7 @@ class User {
 	}
 	////////////////////////////////////////////////
 	///////////////////   LOGIN   //////////////////
+ 
 
 	static async Login(email, password) {
 		try {
@@ -94,9 +95,10 @@ class User {
 		let query = { "email": email };
 		let currentUser = await new DB().FindOne('users', query);
  
-
+		console.log(currentUser._id);
 		if (!currentUser) { throw new Error("User not found"); }
-		return currentUser._id["$oid"];
+		//return currentUser._id["$oid"];
+		return currentUser._id;
 	}
 }
 module.exports = User;
