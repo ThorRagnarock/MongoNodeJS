@@ -12,7 +12,6 @@ UsersRoute.post('/register', UploadImage, async (req, res) => {
 		console.log("Inside the register router");
 		let { name, email, password, recycPrefs, residence, status, birthDate, profileImage } = req.body;
 		status = status || 'מעדיף/ה לא לענות';
-
 		console.log('Image Data in Route:', req.imageData);
 
 		profileImage = req?.imageData?.secure_url || "https://cdn.iconscout.com/icon/free/png-512/free-profile-3484746-2917913.png";
@@ -63,11 +62,15 @@ UsersRoute.post('/checkMail', async (req, res) => {
 
 UsersRoute.post('/returnId', async (req, res) => {
 	try {
-		let { email } = req.body;
+		const { email } = req.body;
 		console.log("returnId route, email: ", email);
-		let data = await UserModel.EmailToId(email);
-		res.status(200).json({ data });
 
+		const userId = await UserModel.EmailToId(email);
+        if (userId) {
+            res.json({ _id: userId });
+		} else {
+			res.status(404).json({ error: 'User not found' });
+		}
 	} catch (error) {
 		console.warn("Error in /returnId route:", error);
 		res.status(500).json({ error: error.message });
