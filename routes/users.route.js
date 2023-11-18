@@ -92,11 +92,10 @@ UsersRoute.get('/', async (req, res) => {
 UsersRoute.put('/:id', async (req, res) => {
 	try {
 		let { id } = req.params;
-		let { profileImage, password, name, residence,birthDate, status } = req.body;
+		let { profileImage, name, residence,birthDate, status } = req.body;
 
 		let updatedObject = {};
 		if (profileImage) updatedObject.profileImage = profileImage;
-		if (password) updatedObject.password = password;
 		if (name) updatedObject.name = name;
 		if (residence) updatedObject.residence = residence;
 		if (birthDate) updatedObject.birthDate = birthDate;

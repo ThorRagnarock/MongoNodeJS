@@ -22,7 +22,7 @@ ShoppinglistRoute.get('/:userID/lists', async (req, res) => { //better show the 
 		res.status(200).json(data);
 	} catch (error) {
 		res.status(500).json({ error });
-	} //I need to get inside each collection and from there look if they have a header document, and if they do I am checking the userID inside of them  
+	} //I have isHeader 
 })//items in specific list - serves both groceries and shoppingList
 ShoppinglistRoute.get('/:userID/SearchListings', async(req,res)=>{
 	try {
@@ -51,13 +51,14 @@ ShoppinglistRoute.post('/createList', async (req, res) => {
 		const { userID, listingHeader, listColor } = req.body;
 		console.log("\n\n Route Action 2 \n\n");
 
-		let data = await ShoppinglistModel.CreateNewList(userID, listingHeader, listColor);
+		let data = await ShoppinglistModel.CreateNewList( userID, listingHeader, listColor );
 		res.status(201).json(data);
 	} catch (error) {
+		console.error(error); 
 		res.status(500).json({ error });
 	}
 })
-ShoppinglistRoute.post('/:collectionName/mailListing/', async (req, res) => {
+ShoppinglistRoute.post('/:collectionName/mailListing', async (req, res) => {
 	try {
 		const { emailAddress } = req.body;
 		const collectionName = req.params.collectionName;
@@ -91,8 +92,9 @@ ShoppinglistRoute.post('/:collectionName/duplicateList', async (req, res) => {
 
 ShoppinglistRoute.put('/:collectionName/toggleParam', async (req, res) => {
 	try {
-		const { paramName } = req.body;
+		const { collectionName } = req.body;
 		const { docId } = req.body;
+		const { paramName } = req.body;
 
 		const pinLogic = async (paramName, turnedValue) => {
 			console.log("Parameter: ", paramName);

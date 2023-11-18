@@ -6,11 +6,11 @@ class ShoppingList {
 	isHeader;
 	userID;	//make a way to grab that (done, through the frontend)
 	listName; //not a must
+	listColor;
 	listType; //not a must
 	archivedStatus; //archived, (strikedthrough in the frontend)
 	pinned;
 	listItems;	//referenced list of items
-	listColor;
 
 	//header document constructor
 	constructor(userID, listName, listColor = "#D9D9D9", listCount) {
@@ -29,12 +29,12 @@ class ShoppingList {
 		this.listItems = [];
 		this.listColor = listColor || "#D9D9D9";
 	}
-	static async CreateNewList(listingHeader, userID, listColor) {
+	static async CreateNewList(userID, listingHeader, listColor) {
 		console.log("\n\n-= brace yourself, it will take seconds =-\n\n");
 		const listCount = await new DB().CountListings(userID);
 		console.log(listCount);
 		//creating an object
-		let listing = new ShoppingList(listingHeader, userID, listColor, listCount);
+		let listing = new ShoppingList(userID, listingHeader, listColor, listCount);
 
 		//creating a temporary named collection
 		const tempName = `temporaryListing`;
@@ -83,12 +83,12 @@ class ShoppingList {
 		const headerFileId = collectionName.split('_')[0];
 		console.log("headerFileID: ", headerFileId, ", listItemID:  ", listItemId, "\nFull collectionName: ", collectionName);
 
-        await new DB().PushById(collectionName, headerFileId, 'listItems', listItemId);
+		await new DB().PushById(collectionName, headerFileId, 'listItems', listItemId);
 	}
 	//  ROUTED FROM GROCERIES.js   //
 	static async RemoveListItem(collectionName, listItemId) {
 		const headerFileId = collectionName.split('_')[0];
-        await new DB().PullById(collectionName, headerFileId, 'listItems', listItemId);
+		await new DB().PullById(collectionName, headerFileId, 'listItems', listItemId);
 	}
 	//
 	static async DeleteList(collectionName) {
@@ -99,11 +99,7 @@ class ShoppingList {
 		return await new DB().UpdateById(collection, userID, doc);
 	}
 	//
-
-
-
-
-
+	
 	static async DuplicateList(collectionName, listNameExtention) {
 		console.log("Now inside the dl function: ", collectionName);
 		await new DB().DuplicateCollection(collectionName, listNameExtention);
@@ -129,7 +125,7 @@ class ShoppingList {
 			table += `<th>${header}</th>`;
 		}
 		table += `</tr>`;
-		
+
 		for (let i = 1; i < data.length; i++) {
 			const row = data[i];
 			console.log("this is row", row);
@@ -143,7 +139,7 @@ class ShoppingList {
 					let coloredBlocks = colors.map(color => `<span style="color:${color};">&#9608;</span>`).join('');
 					table += `<td>${coloredBlocks}</td>`;
 				}
-				 else {
+				else {
 					table += `<td>${row[key]}</td>`;
 				}
 			}

@@ -225,13 +225,10 @@ class DB {
 		console.log("originCollectionName: ",originCollectionName);
 
 		const docs = await this.FindAll(originCollectionName);
-		// console.log("DB -1-");
 		const newColName = new ObjectId().toString(); //(new id)
-		// console.log("DB -2-");
 
 		const headerDoc = await this.FindOne(originCollectionName, { isHeader: true });
-		// console.log("DB -3-", newExt.listNameExtension);
-		// console.log("headerDoc is: ",headerDoc);
+		
 
 		if (headerDoc) {
 			userID = headerDoc.userID;
