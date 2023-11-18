@@ -179,6 +179,7 @@ class DB {
 		}
 	}
 	async AggregateUserSearchListings(userID, searchString) {
+		console.log("DB's aggregate for search...");
 		const agg = [
 			{ $match: { _id: ObjectId(userID) } },
 			{ $unwind: "$shoppingLists" },
