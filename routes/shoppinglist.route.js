@@ -25,10 +25,11 @@ ShoppinglistRoute.get('/:userID/lists', async (req, res) => { //better show the 
 	} //I have isHeader 
 })//items in specific list - serves both groceries and shoppingList
 
-ShoppinglistRoute.get('/:userID/SearchListings', async(req,res)=>{
+ShoppinglistRoute.get('/:userID/:SearchListings', async(req,res)=>{
 	try {
 		let userID = req.params.userID;
-		let { searchString } = req.body;
+		let  searchString  =req.params.searchString;
+
 		let data = await ShoppinglistModel.SearchUserListings(userID, searchString);
 		res.status(200).json(data);
 	} catch (error) {
