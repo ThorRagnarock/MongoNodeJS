@@ -198,6 +198,8 @@ class DB {
 			});
 		}
 		agg.push({ $project: { "listDetails": 1 } });
+		console.log("finished aggregation in db:", agg);
+		console.log("User ID:",userID, ", search string: ", searchString );
 		// { $match: { "listDetails.listName": { $regex: searchString, $options: 'i' } } },
 		// { $project: { "listDetails": 1 } }
 		try {
