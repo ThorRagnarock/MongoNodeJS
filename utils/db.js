@@ -190,7 +190,7 @@ class DB {
 					foreignField: "_id",
 					as: "listDetails"
 				}
-			},
+			}
 		];
 		if (searchString && searchString !== '*') {
 			agg.push({
