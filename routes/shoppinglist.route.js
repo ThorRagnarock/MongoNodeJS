@@ -45,17 +45,16 @@ ShoppinglistRoute.get('/:collectionName/allListItems/', async (req, res) => {v
 })
 ////////////////   POST    ////////////////
 //create a new listing (+creating a header file etc.)
+
 ShoppinglistRoute.post('/createList', async (req, res) => {
 	try {
-		console.log("\n\n Route Action 1 \n\n");
 		const { userID, listingHeader, listColor } = req.body;
-		console.log("\n\n Route Action 2 \n\n");
 
 		let data = await ShoppinglistModel.CreateNewList( userID, listingHeader, listColor );
-		res.status(201).json(data);
+		res.status(201).json({ message: "List created successfully", data });
 	} catch (error) {
 		console.error(error); 
-		res.status(500).json({ error });
+		res.status(500).json({ error: error.message });
 	}
 })
 ShoppinglistRoute.post('/:collectionName/mailListing', async (req, res) => {

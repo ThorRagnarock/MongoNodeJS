@@ -30,10 +30,9 @@ class ShoppingList {
 		this.listColor = listColor || "#D9D9D9";
 	}
 	static async CreateNewList(userID, listingHeader, listColor) {
+
 		console.log("\n\n-= brace yourself, it will take seconds =-\n\n");
 		const listCount = await new DB().CountListings(userID);
-		console.log(listCount);
-		//creating an object
 		let listing = new ShoppingList(userID, listingHeader, listColor, listCount);
 
 		//creating a temporary named collection
@@ -56,6 +55,7 @@ class ShoppingList {
 		if (queryUser) {
 			await new DB().PushById('users', userID, 'shoppingLists', headerID);
 		}
+		return { headerID: result.insertedId, collectionName };
 	}
 	//ROUTED
 	static async AggHeaderList(collectionName) {
