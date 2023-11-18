@@ -192,11 +192,14 @@ class DB {
 				}
 			}
 		];
+		console.log("Past 1st phase of agg");
 		if (searchString && searchString !== '*') {
 			agg.push({
 				$match: { "listDetails.listName": { $regex: searchString, $options: 'i' } }
 			});
 		}
+		console.log("Past 2nd phase of agg");
+
 		agg.push({ $project: { "listDetails": 1 } });
 		console.log("finished aggregation in db:", agg);
 		console.log("User ID:",userID, ", search string: ", searchString );
