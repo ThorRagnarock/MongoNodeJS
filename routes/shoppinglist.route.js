@@ -24,6 +24,7 @@ ShoppinglistRoute.get('/:userID/lists', async (req, res) => { //better show the 
 		res.status(500).json({ error });
 	} //I have isHeader 
 })//items in specific list - serves both groceries and shoppingList
+
 ShoppinglistRoute.get('/:userID/SearchListings', async(req,res)=>{
 	try {
 		let userID = req.params.userID;
@@ -34,6 +35,8 @@ ShoppinglistRoute.get('/:userID/SearchListings', async(req,res)=>{
 		res.status(500).json({error});
 	}
 })
+
+///// that's for use from groceries
 ShoppinglistRoute.get('/:collectionName/allListItems/', async (req, res) => {v
 	try {
 		let { collectionName } = req.params.collectionName;

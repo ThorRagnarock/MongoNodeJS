@@ -180,8 +180,8 @@ class DB {
 	}
 	async AggregateUserSearchListings(userID, searchString) {
 		const agg = [
-			{ 	$match: { _id: ObjectId(userID) }	},
-			{ 	$unwind: "$shoppingLists"			},
+			{ $match: { _id: ObjectId(userID) } },
+			{ $unwind: "$shoppingLists" },
 			{
 				$lookup: {
 					from: "shoppingList",
@@ -190,19 +190,22 @@ class DB {
 					as: "listDetails"
 				}
 			},
-			{
-				$match: { "listDetails.listName": { $regex: searchString, $options: 'i' } }
-			},
-			{ 	$project: { "listDetails": 1 }		}
 		];
-
+		if (searchString && searchString !== '*') {
+			agg.push({
+				$match: { "listDetails.listName": { $regex: searchString, $options: 'i' } }
+			});
+		}
+		agg.push({ $project: { "listDetails": 1 } });
+		// { $match: { "listDetails.listName": { $regex: searchString, $options: 'i' } } },
+		// { $project: { "listDetails": 1 } }
 		try {
 			await this.client.connect();
 			return await this.client.db(this.db_name).collection('users').aggregate(agg).toArray();
 
 		} catch (error) {
 			throw (error);
-		}finally {
+		} finally {
 			await this.client.close();
 		}
 	}
