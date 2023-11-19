@@ -28,4 +28,4 @@ server.get('/*', async (req, res) => {
 	}
 });
 
-	server.listen(PORT, () => { console.log(`http://localhost:${PORT}`) });
+server.listen(PORT, () => { console.log(`http://localhost:${PORT}`) });

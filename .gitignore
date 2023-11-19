@@ -1,7 +1,6 @@
 
 node_modules/
 archive/
-node_modules/
 .expo/
 dist/
 npm-debug.*

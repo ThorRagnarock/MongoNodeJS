@@ -4,7 +4,7 @@ const Utils = require('../utils/utils');
 ////////////////   GET    ////////////////
 GroceryRoute.get('/', async (req, res) => {
 	try {
-		let data = await GroceryModel.FindAllGroceries();
+	let data = await GroceryModel.FindAllGroceries();
 		res.status(200).json(data);
 	} catch (error) {
 		res.status(500).json({ error });

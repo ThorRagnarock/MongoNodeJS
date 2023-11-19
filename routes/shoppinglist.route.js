@@ -19,6 +19,7 @@ const toggleParam = require('../utils/utils').ToggleParam;
 
 ShoppinglistRoute.post('/lists', async (req, res) => { 
 	try { //I don't know why
+		
 		let {userId, rawHeaderIds} = req.body;
         if (!headerIds || headerIds.length === 0) {
 			return res.status(400).send("user missing shoppingLists param in DB")

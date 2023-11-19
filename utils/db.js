@@ -20,6 +20,7 @@ class DB {
 		catch (error) {
 			throw error;
 		} finally {
+			
 			await this.client.close();		//DIS-CONNECTING
 		}
 	}
