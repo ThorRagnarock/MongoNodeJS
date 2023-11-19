@@ -178,7 +178,7 @@ class DB {
 			await this.client.close();
 		}
 	}
-	async AggregateUserSearchListings(userID, searchString) {
+	async AggregateUserSearchListings(userID) {
 		const agg = [
 			{ 	$match: { _id: ObjectId(userID) }	},
 			{ 	$unwind: "$shoppingLists"			},

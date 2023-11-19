@@ -28,11 +28,11 @@ ShoppinglistRoute.get('/:userID/lists', async (req, res) => { //better show the 
 ShoppinglistRoute.get('/:userID/:SearchListings', async(req,res)=>{
 	try {
 		let userID = req.params.userID;
-		let  SearchListings  =req.params.SearchListings;
+		// let  SearchListings  =req.params.SearchListings;
 		console.log("\nuserID from route: ",userID);
 		console.log("\SearchListings from route: ",SearchListings);
 
-		let data = await ShoppinglistModel.SearchUserListings(userID, SearchListings);
+		let data = await ShoppinglistModel.SearchUserListings(userID);
 		res.status(200).json(data);
 	} catch (error) {
 		res.status(500).json({error});

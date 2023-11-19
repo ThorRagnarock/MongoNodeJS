@@ -149,8 +149,8 @@ class ShoppingList {
 		return table;
 	}
 
-	static async SearchUserListings(userID, searchString) {
-		return await new DB().AggregateUserSearchListings(userID, searchString);
+	static async SearchUserListings(userID) {
+		return await new DB().AggregateUserSearchListings(userID);
 	}
 
 	static async RenameListing(collectionName, newName) {
