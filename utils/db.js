@@ -179,10 +179,9 @@ class DB {
 		}
 	}
 	async AggregateUserSearchListings(userID, searchString) {
-		console.log("DB's aggregate for search...");
 		const agg = [
-			{ $match: { _id: ObjectId(userID) } },
-			{ $unwind: "$shoppingLists" },
+			{ 	$match: { _id: ObjectId(userID) }	},
+			{ 	$unwind: "$shoppingLists"			},
 			{
 				$lookup: {
 					from: "shoppingList",
@@ -190,28 +189,18 @@ class DB {
 					foreignField: "_id",
 					as: "listDetails"
 				}
-			}
+			},
+			
+			{ 	$project: { "listDetails": 1 }		}
 		];
-		console.log("Past 1st phase of agg");
-		if (searchString && searchString !== '*') {
-			agg.push({
-				$match: { "listDetails.listName": { $regex: searchString, $options: 'i' } }
-			});
-		}
-		console.log("Past 2nd phase of agg");
 
-		agg.push({ $project: { "listDetails": 1 } });
-		console.log("finished aggregation in db:", agg);
-		console.log("User ID:",userID, ", search string: ", searchString );
-		// { $match: { "listDetails.listName": { $regex: searchString, $options: 'i' } } },
-		// { $project: { "listDetails": 1 } }
 		try {
 			await this.client.connect();
 			return await this.client.db(this.db_name).collection('users').aggregate(agg).toArray();
 
 		} catch (error) {
 			throw (error);
-		} finally {
+		}finally {
 			await this.client.close();
 		}
 	}
@@ -223,6 +212,8 @@ class DB {
 			await this.client.db(this.db_name).collection(oldCollectionName).rename(newCollectionName);
 
 		} catch (error) {
+			console.error("Aggregation error:", error.message);
+
 			throw (error);
 		} finally {
 			await this.client.close();
@@ -234,10 +225,13 @@ class DB {
 		console.log("originCollectionName: ",originCollectionName);
 
 		const docs = await this.FindAll(originCollectionName);
+		// console.log("DB -1-");
 		const newColName = new ObjectId().toString(); //(new id)
+		// console.log("DB -2-");
 
 		const headerDoc = await this.FindOne(originCollectionName, { isHeader: true });
-		
+		// console.log("DB -3-", newExt.listNameExtension);
+		// console.log("headerDoc is: ",headerDoc);
 
 		if (headerDoc) {
 			userID = headerDoc.userID;
@@ -260,3 +254,6 @@ class DB {
 }
 module.exports = DB;
 
+// {
+// 	$match: { "listDetails.listName": { $regex: searchString, $options: 'i' } }
+// },
