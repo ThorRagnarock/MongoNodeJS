@@ -15,20 +15,27 @@ const toggleParam = require('../utils/utils').ToggleParam;
 // 		res.status(500).json({ error });
 // 	}
 // })
-ShoppinglistRoute.get('/:userID/lists', async (req, res) => { //better show the aggregation
+
+
+ShoppinglistRoute.post('/lists', async (req, res) => { 
 	try { //I don't know why
-		let userID = req.params.userID;
-		let data = await ShoppinglistModel.AllUserLists(userID);
+		let {userId, rawHeaderIds} = req.body;
+        if (!headerIds || headerIds.length === 0) {
+			return res.status(400).send("user missing shoppingLists param in DB")
+		}
+		let data = await ShoppinglistModel.retrieveListings(userId, rawHeaderIds);
 		res.status(200).json(data);
 	} catch (error) {
+		console.log(error);
 		res.status(500).json({ error });
-	} //I have isHeader 
+	} 
 })//items in specific list - serves both groceries and shoppingList
+
 
 ShoppinglistRoute.get('/:userID/:SearchListings', async(req,res)=>{
 	try {
 		let userID = req.params.userID;
-		// let  SearchListings  =req.params.SearchListings;
+		let  SearchListings  =req.params.SearchListings;
 		console.log("\nuserID from route: ",userID);
 		console.log("\SearchListings from route: ",SearchListings);
 

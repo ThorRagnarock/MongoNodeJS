@@ -178,7 +178,9 @@ class DB {
 			await this.client.close();
 		}
 	}
-	async AggregateUserSearchListings(userID) {
+	// this function, AggregateUserSearchListings - is BROKEN
+	async AggregateUserSearchListings(userID, searchString) {
+		// NOT WORKING!!!!
 		const agg = [
 			{ 	$match: { _id: ObjectId(userID) }	},
 			{ 	$unwind: "$shoppingLists"			},
@@ -190,7 +192,9 @@ class DB {
 					as: "listDetails"
 				}
 			},
-			
+			{
+				$match: { "listDetails.listName": { $regex: searchString, $options: 'i' } }
+			},
 			{ 	$project: { "listDetails": 1 }		}
 		];
 
@@ -212,8 +216,6 @@ class DB {
 			await this.client.db(this.db_name).collection(oldCollectionName).rename(newCollectionName);
 
 		} catch (error) {
-			console.error("Aggregation error:", error.message);
-
 			throw (error);
 		} finally {
 			await this.client.close();
@@ -254,6 +256,3 @@ class DB {
 }
 module.exports = DB;
 
-// {
-// 	$match: { "listDetails.listName": { $regex: searchString, $options: 'i' } }
-// },

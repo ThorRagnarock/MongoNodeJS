@@ -149,8 +149,8 @@ class ShoppingList {
 		return table;
 	}
 
-	static async SearchUserListings(userID) {
-		return await new DB().AggregateUserSearchListings(userID);
+	static async SearchUserListings(userID, searchListings) {
+		return await new DB().AggregateUserSearchListings(userID, searchListings);
 	}
 
 	static async RenameListing(collectionName, newName) {
@@ -164,6 +164,19 @@ class ShoppingList {
 			// Handle the error - item not found
 			throw new Error("Header not found");
 		}
+	}
+
+	static async retrieveListings(userId, rawHeaderIds) {
+		const headerArr = [];
+		const filter = { isHeader: true };
+
+		const listingsIds = rawHeaderIds.map(list=>list.$oid);
+		for(listingHeader of listingsIds) {
+			const collectionName = `${listingHeader}_${userId}`;
+			const headerDoc = await new DB().FindOne(collectionName, filter);
+			if (headerDoc) headerArr.push(headerDoc);
+		}
+		return headerDoc;
 	}
 }
 
