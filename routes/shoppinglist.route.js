@@ -32,19 +32,19 @@ ShoppinglistRoute.post('/lists', async (req, res) => {
 })//items in specific list - serves both groceries and shoppingList
 
 
-ShoppinglistRoute.get('/:userID/:SearchListings', async(req,res)=>{
-	try {
-		let userID = req.params.userID;
-		let  SearchListings  =req.params.SearchListings;
-		console.log("\nuserID from route: ",userID);
-		console.log("\SearchListings from route: ",SearchListings);
+// ShoppinglistRoute.get('/:userID/:SearchListings', async(req,res)=>{
+// 	try {
+// 		let userID = req.params.userID;
+// 		let  SearchListings  =req.params.SearchListings;
+// 		console.log("\nuserID from route: ",userID);
+// 		console.log("\SearchListings from route: ",SearchListings);
 
-		let data = await ShoppinglistModel.SearchUserListings(userID);
-		res.status(200).json(data);
-	} catch (error) {
-		res.status(500).json({error});
-	}
-})
+// 		let data = await ShoppinglistModel.SearchUserListings(userID);
+// 		res.status(200).json(data);
+// 	} catch (error) {
+// 		res.status(500).json({error});
+// 	}
+// })
 
 ///// that's for use from groceries
 ShoppinglistRoute.get('/:collectionName/allListItems/', async (req, res) => {v

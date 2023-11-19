@@ -18,13 +18,14 @@ server.use(express.static(path.join(__dirname, 'client', 'dist')));
 server.use('/api/users', 		require('./routes/users.route'));
 server.use('/api/groceries', 	require('./routes/groceries.route'));
 server.use('/api/shoppinglist', require('./routes/shoppinglist.route'));
-server.use('./api/upload', 		require('./routes/upload.route'))
+server.use('/api/upload', 		require('./routes/upload.route'))
 
 server.get('/*', async (req, res) => {
 	try {
 		res.status(200).sendFile(path.join(__dirname,'client', 'dist', 'index.html'));
 	} catch (error) {
 		res.status(500).json({ error });
-	}});
+	}
+});
 
 	server.listen(PORT, () => { console.log(`http://localhost:${PORT}`) });
